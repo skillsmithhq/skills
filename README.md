@@ -30,6 +30,10 @@ On Windows (PowerShell):
 $d = "$HOME/.claude/skills/aws-cost-estimate"; New-Item -ItemType Directory -Force $d | Out-Null; Invoke-WebRequest -UseBasicParsing "https://install.skillsmith.workers.dev/s/aws-cost-estimate" -OutFile "$d/SKILL.md"
 ```
 
+## Update
+
+Run the same install command again to get the latest version of a skill. With the CLI you can also run `npx skills update`.
+
 ## Use
 
 Start a new Claude Code session (terminal, VS Code, or JetBrains) and ask as you normally would, e.g. "check this migration for safety". The matching skill loads automatically. To use a specific skill, name it: "use `migration-safety-check` on this file".
