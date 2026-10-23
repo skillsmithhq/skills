@@ -1,8 +1,8 @@
 # Skills index
 
-100 skills in 12 categories. Each links to its `SKILL.md`. **For** lists who the skill is most useful to (Developer, Tester, Reviewer, Tech Lead, Manager) and which part of the stack it applies to (Backend, Frontend, DevOps, or Any stack).
+101 skills in 12 categories. Each links to its `SKILL.md`. **For** lists who the skill is most useful to (Developer, Tester, Reviewer, Tech Lead, Manager) and which part of the stack it applies to (Backend, Frontend, DevOps, or Any stack).
 
-## Security (13)
+## Security (14)
 
 | Skill | What it does | For |
 |---|---|---|
@@ -19,6 +19,7 @@
 | [`secret-rotation-check`](skills/secret-rotation-check/SKILL.md) | After a secret is rotated, check it was actually replaced everywhere it's used — not just the primary secret store — since a partial rotation leaves a working old credential. | Developer, Reviewer, Tech Lead · Backend, DevOps |
 | [`pii-response-leak-check`](skills/pii-response-leak-check/SKILL.md) | Check that error responses returned to API clients don't leak PII, internal stack traces, or DB error text — distinct from logging PII checks, since this is about what the client receives. | Developer, Reviewer, Tech Lead · Backend |
 | [`dependency-vulnerability-check`](skills/dependency-vulnerability-check/SKILL.md) | Check a dependency manifest/lockfile change for known-vulnerable versions using the ecosystem's actual audit tool, distinguishing reachable vulnerabilities from unreachable ones. | Developer, Reviewer, Tech Lead · Backend, Frontend, DevOps |
+| [`cert-trust-incident-check`](skills/cert-trust-incident-check/SKILL.md) | Check any machine (macOS, Linux, BSD, Windows) for exposure to a compromised certificate authority: test which TLS clients still trust it, inventory OS, browsers, runtimes and trust bundles, and list issues with actions. Ships with data for the October 2026 eMudhra intermediate compromise. | Developer, Tester, Tech Lead · DevOps |
 
 ## AI & agents (17)
 

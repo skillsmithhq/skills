@@ -1,6 +1,6 @@
 # Skillsmith · Engineering Skills
 
-100 stack-agnostic skills for AI coding agents, covering security, data, delivery, reliability, cloud cost, testing, and documentation. Each skill adapts to the conventions of the repository in which it is used.
+101 stack-agnostic skills for AI coding agents, covering security, data, delivery, reliability, cloud cost, testing, and documentation. Each skill adapts to the conventions of the repository in which it is used.
 
 **Browse all skills → [INDEX.md](INDEX.md)**
 
