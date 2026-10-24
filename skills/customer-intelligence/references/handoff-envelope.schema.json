@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "handoff-envelope.schema.json",
+  "title": "Inter-skill handoff envelope",
+  "type": "object",
+  "required": ["skill", "skill_version", "engagement_id", "produced_at", "status", "inputs", "payload", "limitations", "open_questions"],
+  "properties": {
+    "skill": {"type": "string"},
+    "skill_version": {"type": "string"},
+    "engagement_id": {"type": "string"},
+    "produced_at": {"type": "string"},
+    "status": {"type": "string", "enum": ["complete", "partial", "degraded", "blocked"]},
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["artefact_id", "produced_by"],
+        "properties": {
+          "artefact_id": {"type": "string"},
+          "produced_by": {"type": "string"},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "payload": {"type": "object"},
+    "evidence": {"type": "array", "items": {"type": "object"}},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "open_questions": {"type": "array", "items": {"type": "string"}}
+  }
+}

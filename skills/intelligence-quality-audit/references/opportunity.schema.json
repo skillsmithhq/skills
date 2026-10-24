@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "opportunity.schema.json",
+  "title": "BIDIM opportunity register input",
+  "type": "object",
+  "required": ["engagement_id", "impact_basis", "opportunities"],
+  "properties": {
+    "engagement_id": {"type": "string"},
+    "impact_basis": {"type": "string"},
+    "opportunities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "decision", "scores", "rationale", "evidence"],
+        "properties": {
+          "id": {"type": "string"},
+          "title": {"type": "string"},
+          "decision": {"type": "string"},
+          "scores": {
+            "type": "object",
+            "properties": {
+              "impact": {"type": ["integer", "null"], "minimum": 1, "maximum": 5},
+              "confidence": {"type": ["integer", "null"], "minimum": 1, "maximum": 5},
+              "strategic_fit": {"type": ["integer", "null"], "minimum": 1, "maximum": 5},
+              "effort": {"type": ["integer", "null"], "minimum": 1, "maximum": 5},
+              "risk": {"type": ["integer", "null"], "minimum": 1, "maximum": 5},
+              "data_readiness": {"type": ["integer", "null"], "minimum": 1, "maximum": 5},
+              "time_to_value": {"type": ["integer", "null"], "minimum": 1, "maximum": 5}
+            }
+          },
+          "rationale": {"type": "object"},
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "class"],
+              "properties": {
+                "id": {"type": "string"},
+                "class": {"type": "string", "enum": ["FACT", "CALC", "PATTERN", "HYP", "INTERP", "REC", "ASSUME", "UNKNOWN"]}
+              }
+            }
+          },
+          "assumptions": {"type": "array", "items": {"type": "string"}},
+          "missing_evidence": {"type": "array", "items": {"type": "string"}},
+          "owner": {"type": "string"},
+          "next_action": {"type": "string"}
+        }
+      }
+    }
+  }
+}

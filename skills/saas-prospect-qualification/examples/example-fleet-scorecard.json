@@ -1,0 +1,12 @@
+{
+  "company": "Example Fleet Software Ltd (fictional)",
+  "criteria": {
+    "recurring_revenue": {"score": 2, "evidence": ["pros-efs-01"]},
+    "size_band": {"score": null, "evidence": []},
+    "multiple_systems": {"score": 2, "evidence": ["pros-efs-02", "pros-efs-03"]},
+    "product_complexity": {"score": 1, "evidence": ["pros-efs-01"]},
+    "no_inhouse_bi": {"score": 1, "evidence": ["pros-efs-04"]},
+    "growth_signal": {"score": 2, "evidence": ["pros-efs-04"]},
+    "decision_maker_role": {"score": 2, "evidence": ["pros-efs-05"]}
+  }
+}

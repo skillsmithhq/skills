@@ -1,0 +1,10 @@
+{
+  "baseline_month": "2026-05",
+  "assumptions": [
+    "The May staging compute line (4,300 USD) is a load-test cluster left running, per the platform team (to be confirmed)",
+    "Staging compute is not required between scheduled load tests",
+    "No production capacity depends on the staging cluster"
+  ],
+  "annualise": false,
+  "changes": [{"match": {"environment": "staging", "service": "compute"}, "reduction_pct": 100}]
+}

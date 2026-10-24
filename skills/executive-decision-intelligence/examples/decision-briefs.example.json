@@ -1,0 +1,54 @@
+{
+  "engagement_id": "example-ledger-cloud-2026",
+  "as_of": "2026-06-30",
+  "recommendations": [
+    {
+      "id": "R-01", "audience": "CEO",
+      "decision": "Whether to treat revenue concentration as a board-level risk this quarter",
+      "evidence": [{"id": "rev-concentration", "class": "CALC"}, {"id": "bidim-opp-04", "class": "CALC"}],
+      "business_impact": "The top customer is 31.46% of MRR and the top 3 are 80.90%; losing one top-3 account would remove 22-31% of MRR [CALC:rev-concentration]",
+      "confidence": {"level": "High", "reason": "Deterministic calculation on billing data; measures exposure, not the likelihood of loss"},
+      "alternatives": ["Dedicated account management for the top 3 (OPP-04)", "Diversify through SMB and Mid-Market acquisition", "Do nothing and monitor quarterly"],
+      "risks": ["Programme cost with an unquantified retention effect"],
+      "dependencies": ["CBO capacity to own the accounts"],
+      "next_action": "CEO and CBO agree the programme scope at the next leadership meeting",
+      "measurement": "Top-3 share of MRR and top-3 renewal outcomes, reviewed quarterly"
+    },
+    {
+      "id": "R-02", "audience": "CTO",
+      "decision": "Whether to add budget alerts for non-production environments",
+      "evidence": [{"id": "ops-cost-2026-05", "class": "CALC"}, {"id": "anom-infra-2026-05", "class": "CALC"}],
+      "business_impact": "May infrastructure cost rose 4,200 USD against April; staging accounts for 4,300 USD of the change [CALC:ops-cost-2026-05]",
+      "confidence": {"level": "Medium", "reason": "Decomposition supports the staging explanation; platform team has not yet confirmed the cause"},
+      "alternatives": ["Scheduled shutdown of staging clusters", "Defer until the cause is confirmed"],
+      "risks": ["Alerts ignored without an owner"],
+      "dependencies": ["Platform team confirmation"],
+      "next_action": "Platform lead confirms what ran in staging in May and configures an alert",
+      "measurement": "Monthly non-production spend, against a threshold agreed with the CTO"
+    },
+    {
+      "id": "R-03", "audience": "CBO",
+      "decision": "Whether account owners review C006 this month",
+      "evidence": [{"id": "cust-health-c006", "class": "CALC"}],
+      "business_impact": "C006 shows contraction, zero June usage, an overdue invoice and 4 tickets in 60 days; MRR at stake is 250 USD [CALC:cust-health-c006]",
+      "confidence": {"level": "Medium", "reason": "Signals are measured; their meaning for retention is unknown and based on one account"},
+      "alternatives": ["Include C006 in a general SMB check-in", "Do nothing"],
+      "risks": ["Over-reacting to a single account"],
+      "dependencies": ["Account owner availability"],
+      "next_action": "Account owner contacts C006 within two weeks",
+      "measurement": "C006 usage and renewal status over 60 days"
+    },
+    {
+      "id": "R-04", "audience": "Investor",
+      "decision": "Which diligence questions to raise about revenue quality",
+      "evidence": [{"id": "rev-nrr", "class": "CALC"}, {"id": "rev-concentration", "class": "CALC"}, {"id": "rev-collections", "class": "CALC"}],
+      "business_impact": "NRR is 93.26% over a 5-month window, the top 3 customers are 80.90% of MRR, and the collection rate is 97.57% [CALC:rev-nrr; rev-concentration; rev-collections]",
+      "confidence": {"level": "Medium", "reason": "History is shorter than 12 months; 800 USD of MRR is excluded pending data fixes"},
+      "alternatives": ["Wait for 12 months of history before forming a view", "Defer"],
+      "risks": ["Short window may not represent annual retention"],
+      "dependencies": ["Billing data fixes (OPP-01)"],
+      "next_action": "Ask management for 12-month cohort retention and top-3 contract terms",
+      "measurement": "12-month NRR and GRR once available"
+    }
+  ]
+}

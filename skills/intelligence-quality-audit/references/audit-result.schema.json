@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "audit-result.schema.json",
+  "title": "Intelligence quality audit result",
+  "type": "object",
+  "required": ["verdict", "issues", "calculation_checks", "summary"],
+  "properties": {
+    "verdict": {"type": "string", "enum": ["pass", "needs-revision", "fail"]},
+    "summary": {"type": "object"},
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["severity", "category", "location", "detail", "required_correction"],
+        "properties": {
+          "severity": {"type": "string", "enum": ["critical", "major", "minor"]},
+          "category": {"type": "string"},
+          "location": {"type": "string"},
+          "detail": {"type": "string"},
+          "required_correction": {"type": "string"}
+        }
+      }
+    },
+    "calculation_checks": {"type": "array", "items": {"type": "object"}}
+  }
+}

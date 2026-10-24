@@ -1,0 +1,198 @@
+{
+  "engagement_id": "example-ledger-cloud-2026",
+  "impact_basis": "Annual effect as % of ARR at 2026-06 (267,000 USD); bands fixed before scoring",
+  "opportunities": [
+    {
+      "id": "OPP-01",
+      "title": "Fix billing data gaps (S010 start date, S011 currency, duplicate invoice control)",
+      "decision": "Whether billing ops fixes source records before the board pack",
+      "scores": {
+        "impact": 3,
+        "confidence": 4,
+        "strategic_fit": 3,
+        "effort": 1,
+        "risk": 1,
+        "data_readiness": 4,
+        "time_to_value": 1
+      },
+      "rationale": {
+        "impact": "800 USD MRR (9,600 ARR = 3.6% of ARR) currently unreported [rev exclusions]",
+        "confidence": "Exclusions computed deterministically; owner confirmation pending",
+        "strategic_fit": "Board asked for trusted NRR (discovery)",
+        "effort": "Two record fixes plus one duplicate check",
+        "risk": "Reversible record edits"
+      },
+      "evidence": [
+        {
+          "id": "rev-mrr-2026-06",
+          "class": "CALC"
+        },
+        {
+          "id": "dq-subscriptions",
+          "class": "CALC"
+        }
+      ],
+      "next_action": "Billing owner corrects S010/S011; add invoice-ID uniqueness check",
+      "owner": "CFO"
+    },
+    {
+      "id": "OPP-02",
+      "title": "Staging cost guardrail",
+      "decision": "Whether platform team adds non-production budget alerts",
+      "scores": {
+        "impact": 2,
+        "confidence": 3,
+        "strategic_fit": 2,
+        "effort": 1,
+        "risk": 1,
+        "data_readiness": 5,
+        "time_to_value": 1
+      },
+      "rationale": {
+        "impact": "4,300 USD in one month = 1.6% of ARR if it recurred once a year",
+        "confidence": "Decomposition supports staging; recurrence unproven",
+        "strategic_fit": "Cost control is a secondary objective",
+        "effort": "Configure an alert",
+        "risk": "None to production"
+      },
+      "evidence": [
+        {
+          "id": "ops-cost-2026-05",
+          "class": "CALC"
+        },
+        {
+          "id": "anom-infra-2026-05",
+          "class": "CALC"
+        }
+      ],
+      "next_action": "Platform team confirms cause; add alert",
+      "owner": "CTO"
+    },
+    {
+      "id": "OPP-03",
+      "title": "Account review for accounts with co-occurring risk signals",
+      "decision": "Whether account owners review C006 this month",
+      "scores": {
+        "impact": 1,
+        "confidence": 3,
+        "strategic_fit": 3,
+        "effort": 1,
+        "risk": 1,
+        "data_readiness": 4,
+        "time_to_value": 1
+      },
+      "rationale": {
+        "impact": "250 USD MRR (0.1% of ARR)",
+        "confidence": "Signals measured; meaning for retention unknown",
+        "strategic_fit": "Retention is a stated objective",
+        "effort": "One review meeting",
+        "risk": "Low"
+      },
+      "evidence": [
+        {
+          "id": "cust-health-c006",
+          "class": "CALC"
+        }
+      ],
+      "next_action": "Account owner review; track renewal and usage for 60 days",
+      "owner": "CBO"
+    },
+    {
+      "id": "OPP-04",
+      "title": "Top-3 account management programme",
+      "decision": "Whether to assign dedicated account management to C009, C002, C001",
+      "scores": {
+        "impact": null,
+        "confidence": 3,
+        "strategic_fit": 5,
+        "effort": 2,
+        "risk": 2,
+        "data_readiness": 5,
+        "time_to_value": 2
+      },
+      "rationale": {
+        "impact": "Exposure measured (top-3 = 80.90% of MRR) but the programme's effect on retention is not quantifiable from this data",
+        "confidence": "Concentration measured; programme effect unknown",
+        "strategic_fit": "CEO named concentration as a board concern",
+        "effort": "Assign owners and quarterly reviews",
+        "risk": "Some cost; reversible"
+      },
+      "evidence": [
+        {
+          "id": "rev-concentration",
+          "class": "CALC"
+        }
+      ],
+      "missing_evidence": [
+        "Retention effect of account management for comparable accounts"
+      ],
+      "next_action": "Agree programme scope with CBO",
+      "owner": "CEO"
+    },
+    {
+      "id": "OPP-05",
+      "title": "Onboarding alert set-up experiment",
+      "decision": "Whether product runs an onboarding experiment next quarter",
+      "scores": {
+        "impact": 2,
+        "confidence": 3,
+        "strategic_fit": 3,
+        "effort": 2,
+        "risk": 1,
+        "data_readiness": 4,
+        "time_to_value": 3
+      },
+      "rationale": {
+        "impact": "Hypothesised; basis is adoption gap (3 of 8 accounts use alerts)",
+        "confidence": "Only hypothesis evidence so far",
+        "strategic_fit": "Activation is a product objective",
+        "effort": "Small onboarding change plus measurement",
+        "risk": "Low"
+      },
+      "evidence": [
+        {
+          "id": "h-onboarding-alerts",
+          "class": "HYP"
+        },
+        {
+          "id": "i-alerts-engagement",
+          "class": "INTERP"
+        }
+      ],
+      "next_action": "Design experiment with threshold set in advance",
+      "owner": "Head of Product"
+    },
+    {
+      "id": "OPP-06",
+      "title": "AI churn prediction platform",
+      "decision": "Whether to fund a churn prediction build",
+      "scores": {
+        "impact": 5,
+        "confidence": 5,
+        "strategic_fit": 4,
+        "effort": 5,
+        "risk": 3,
+        "data_readiness": 2,
+        "time_to_value": 5
+      },
+      "rationale": {
+        "impact": "Proposer expects large retention gains",
+        "confidence": "Proposer is very confident",
+        "strategic_fit": "Retention objective",
+        "effort": "New platform",
+        "risk": "Model on 2 churn events; customer-facing actions"
+      },
+      "evidence": [
+        {
+          "id": "i-prediction-value",
+          "class": "INTERP"
+        }
+      ],
+      "assumptions": [
+        "Enough churn history exists (it does not: 2 events)"
+      ],
+      "next_action": "Revisit when 12+ months of data and 30+ churn events exist",
+      "owner": "CTO"
+    }
+  ]
+}

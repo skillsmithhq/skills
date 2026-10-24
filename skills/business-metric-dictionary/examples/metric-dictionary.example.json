@@ -1,0 +1,478 @@
+{
+  "client": "Example Ledger Cloud (fictional)",
+  "version": "0.3",
+  "reporting_currency": "USD",
+  "reporting_timezone": "UTC",
+  "change_log": [
+    {
+      "version": "0.3",
+      "date": "2026-10-20",
+      "change": "CFO approved revenue metrics; CAC, LTV, GM marked not calculable"
+    }
+  ],
+  "metrics": [
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "CFO",
+      "id": "mrr",
+      "name": "Monthly recurring revenue",
+      "definition_id": "MRR-1",
+      "business_definition": "Recurring subscription revenue normalised to one month, for subscriptions active at month end",
+      "formula": "sum(subscriptions.mrr_amount) where start_date <= period_end and (end_date is null or end_date > period_end)",
+      "source_systems": [
+        "billing"
+      ],
+      "required_fields": [
+        "subscriptions.mrr_amount",
+        "subscriptions.currency",
+        "subscriptions.start_date",
+        "subscriptions.end_date",
+        "subscriptions.customer_id"
+      ],
+      "grain": "customer x month",
+      "time_period": "calendar month, measured at month end",
+      "inclusions": [
+        "recurring subscription amounts"
+      ],
+      "exclusions": [
+        "one-off invoices",
+        "subscriptions without start_date",
+        "non-ISO currency"
+      ],
+      "known_limitations": [
+        "mrr_amount: confirm whether net of discounts",
+        "S010 and S011 excluded pending fixes (800 USD)"
+      ],
+      "use_cases": [
+        "board reporting",
+        "growth tracking"
+      ],
+      "status": "approved",
+      "approved_by": "CFO",
+      "approved_on": "2026-10-20"
+    },
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "CFO",
+      "id": "arr",
+      "name": "Annual recurring revenue",
+      "definition_id": "ARR-1",
+      "business_definition": "MRR annualised",
+      "formula": "mrr x 12 at the same month end",
+      "source_systems": [
+        "billing"
+      ],
+      "required_fields": [
+        "subscriptions.mrr_amount"
+      ],
+      "grain": "company x month",
+      "time_period": "month end",
+      "known_limitations": [
+        "inherits MRR exclusions"
+      ],
+      "use_cases": [
+        "investor reporting"
+      ],
+      "status": "approved",
+      "approved_by": "CFO",
+      "approved_on": "2026-10-20",
+      "inclusions": [],
+      "exclusions": []
+    },
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "CFO",
+      "id": "revenue_growth",
+      "name": "MRR growth",
+      "definition_id": "GROWTH-1",
+      "business_definition": "Relative change in MRR between two month ends",
+      "formula": "(mrr_end - mrr_start) / mrr_start",
+      "source_systems": [
+        "billing"
+      ],
+      "required_fields": [
+        "subscriptions.mrr_amount"
+      ],
+      "grain": "company",
+      "time_period": "stated start and end month",
+      "known_limitations": [
+        "6 months of history only"
+      ],
+      "use_cases": [
+        "growth tracking"
+      ],
+      "status": "approved",
+      "approved_by": "CFO",
+      "approved_on": "2026-10-20",
+      "inclusions": [],
+      "exclusions": []
+    },
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "CFO",
+      "id": "nrr",
+      "name": "Net revenue retention",
+      "definition_id": "NRR-1",
+      "business_definition": "MRR retained from customers active at the start date, including expansion",
+      "formula": "cohort_mrr(end) / cohort_mrr(start); cohort = customers with MRR > 0 at start",
+      "source_systems": [
+        "billing"
+      ],
+      "required_fields": [
+        "subscriptions.mrr_amount",
+        "subscriptions.customer_id"
+      ],
+      "grain": "cohort",
+      "time_period": "Jan-Jun 2026 (5-month window); 12-month standard not yet possible",
+      "known_limitations": [
+        "window shorter than 12 months: do not compare with 12-month benchmarks",
+        "customer entities must be de-duplicated first"
+      ],
+      "use_cases": [
+        "retention health",
+        "investor reporting"
+      ],
+      "status": "approved",
+      "approved_by": "CFO",
+      "approved_on": "2026-10-20",
+      "inclusions": [],
+      "exclusions": []
+    },
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "CFO",
+      "id": "grr",
+      "name": "Gross revenue retention",
+      "definition_id": "GRR-1",
+      "business_definition": "NRR excluding expansion",
+      "formula": "(start - contraction - churn) / start",
+      "source_systems": [
+        "billing"
+      ],
+      "required_fields": [
+        "subscriptions.mrr_amount"
+      ],
+      "grain": "cohort",
+      "time_period": "as NRR",
+      "known_limitations": [
+        "as NRR"
+      ],
+      "use_cases": [
+        "retention health"
+      ],
+      "status": "approved",
+      "approved_by": "CFO",
+      "approved_on": "2026-10-20",
+      "inclusions": [],
+      "exclusions": []
+    },
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "CFO",
+      "id": "logo_churn",
+      "name": "Customer churn",
+      "definition_id": "CHURN-L1",
+      "business_definition": "Share of start-cohort customers with no MRR at the end date",
+      "formula": "count(cohort customers with mrr_end = 0) / count(cohort)",
+      "source_systems": [
+        "billing"
+      ],
+      "required_fields": [
+        "subscriptions.customer_id",
+        "subscriptions.end_date"
+      ],
+      "grain": "cohort",
+      "time_period": "as NRR",
+      "known_limitations": [
+        "2 churn events only: no comparison between groups at more than Low confidence"
+      ],
+      "use_cases": [
+        "retention health"
+      ],
+      "status": "approved",
+      "approved_by": "CFO",
+      "approved_on": "2026-10-20",
+      "inclusions": [],
+      "exclusions": []
+    },
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "CFO",
+      "id": "revenue_churn",
+      "name": "Gross revenue churn",
+      "definition_id": "CHURN-R1",
+      "business_definition": "Contraction plus churned MRR over start MRR",
+      "formula": "(contraction + churn) / start_mrr",
+      "source_systems": [
+        "billing"
+      ],
+      "required_fields": [
+        "subscriptions.mrr_amount"
+      ],
+      "grain": "cohort",
+      "time_period": "as NRR",
+      "known_limitations": [
+        "as NRR"
+      ],
+      "use_cases": [
+        "retention health"
+      ],
+      "status": "approved",
+      "approved_by": "CFO",
+      "approved_on": "2026-10-20",
+      "inclusions": [],
+      "exclusions": []
+    },
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "CFO",
+      "id": "arpa",
+      "name": "Average revenue per account",
+      "definition_id": "ARPA-1",
+      "business_definition": "MRR divided by paying customer entities",
+      "formula": "mrr / count(distinct customer entities with mrr > 0)",
+      "source_systems": [
+        "billing"
+      ],
+      "required_fields": [
+        "subscriptions.mrr_amount",
+        "subscriptions.customer_id"
+      ],
+      "grain": "company x month",
+      "time_period": "month end",
+      "known_limitations": [
+        "sensitive to entity de-duplication"
+      ],
+      "use_cases": [
+        "pricing",
+        "segmentation"
+      ],
+      "status": "approved",
+      "approved_by": "CFO",
+      "approved_on": "2026-10-20",
+      "inclusions": [],
+      "exclusions": []
+    },
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "CFO",
+      "id": "concentration",
+      "name": "Customer concentration",
+      "definition_id": "CONC-1",
+      "business_definition": "Share of MRR from the largest and the top-3 customers",
+      "formula": "max(customer_mrr)/mrr; sum(top3 customer_mrr)/mrr",
+      "source_systems": [
+        "billing"
+      ],
+      "required_fields": [
+        "subscriptions.mrr_amount",
+        "subscriptions.customer_id"
+      ],
+      "grain": "company x month",
+      "time_period": "month end",
+      "known_limitations": [
+        "entity de-duplication required"
+      ],
+      "use_cases": [
+        "risk",
+        "investor reporting"
+      ],
+      "status": "approved",
+      "approved_by": "CFO",
+      "approved_on": "2026-10-20",
+      "inclusions": [],
+      "exclusions": []
+    },
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "CFO",
+      "id": "gross_margin",
+      "name": "Gross margin",
+      "definition_id": "GM-1",
+      "business_definition": "Revenue less cost of revenue, over revenue",
+      "formula": "(revenue - cost_of_revenue) / revenue",
+      "source_systems": [
+        "finance"
+      ],
+      "required_fields": [
+        "finance.cost_of_revenue"
+      ],
+      "grain": "company x month",
+      "time_period": "month",
+      "known_limitations": [
+        "cost of revenue not supplied"
+      ],
+      "use_cases": [
+        "profitability"
+      ],
+      "status": "not-calculable",
+      "not_calculable_reason": "No cost-of-revenue data (only infrastructure cost). Use OPS-2 infrastructure cost ratio instead; do not label it gross margin",
+      "inclusions": [],
+      "exclusions": []
+    },
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "CFO",
+      "id": "cac",
+      "name": "Customer acquisition cost",
+      "definition_id": "CAC-1",
+      "business_definition": "Sales and marketing spend per new customer",
+      "formula": "s_and_m_spend(period) / new_customers(period)",
+      "source_systems": [
+        "finance",
+        "crm"
+      ],
+      "required_fields": [
+        "finance.sales_marketing_spend"
+      ],
+      "grain": "company x quarter",
+      "time_period": "quarter",
+      "known_limitations": [
+        "spend data not supplied"
+      ],
+      "use_cases": [
+        "unit economics"
+      ],
+      "status": "not-calculable",
+      "not_calculable_reason": "No sales and marketing spend data. Do not approximate from headcount",
+      "inclusions": [],
+      "exclusions": []
+    },
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "CFO",
+      "id": "ltv",
+      "name": "Customer lifetime value",
+      "definition_id": "LTV-1",
+      "business_definition": "Expected gross profit per customer over its lifetime",
+      "formula": "arpa x gross_margin_pct / monthly_revenue_churn",
+      "source_systems": [
+        "billing",
+        "finance"
+      ],
+      "required_fields": [
+        "finance.cost_of_revenue"
+      ],
+      "grain": "segment",
+      "time_period": "trailing 12 months",
+      "known_limitations": [
+        "gross margin unavailable",
+        "under 12 months of churn history",
+        "2 churn events"
+      ],
+      "use_cases": [
+        "unit economics"
+      ],
+      "status": "not-calculable",
+      "not_calculable_reason": "Gross margin unavailable; churn history under 12 months and fewer than 30 churn events",
+      "inclusions": [],
+      "exclusions": []
+    },
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "Head of Product",
+      "id": "activation",
+      "name": "User activation rate",
+      "definition_id": "ACT-1",
+      "business_definition": "Share of new users who create a report within 14 days of user creation",
+      "formula": "count(users with report_created within 14 days of created_at) / count(cohort users); cohort = users whose 14-day window lies inside event coverage",
+      "source_systems": [
+        "product analytics"
+      ],
+      "required_fields": [
+        "users.user_id",
+        "users.created_at",
+        "product_events.event_name",
+        "product_events.occurred_at"
+      ],
+      "grain": "user cohort",
+      "time_period": "users created 2026-04-01..2026-06-16",
+      "known_limitations": [
+        "event coverage starts 2026-04-01",
+        "small cohort (n=4)"
+      ],
+      "use_cases": [
+        "onboarding"
+      ],
+      "status": "draft",
+      "inclusions": [],
+      "exclusions": []
+    },
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "Head of Product",
+      "id": "feature_adoption",
+      "name": "Feature adoption (account level)",
+      "definition_id": "ADOPT-1",
+      "business_definition": "Share of paying accounts using a feature at least once in the month",
+      "formula": "count(paying accounts with >= 1 feature event) / count(paying accounts)",
+      "source_systems": [
+        "product analytics",
+        "billing"
+      ],
+      "required_fields": [
+        "product_events.event_name",
+        "product_events.user_id",
+        "users.customer_id",
+        "subscriptions.mrr_amount"
+      ],
+      "grain": "feature x month",
+      "time_period": "calendar month",
+      "known_limitations": [
+        "events missing 2026-05-11..17"
+      ],
+      "use_cases": [
+        "product strategy"
+      ],
+      "status": "draft",
+      "inclusions": [],
+      "exclusions": []
+    },
+    {
+      "currency_handling": "USD only. Currency codes normalised for case only; non-ISO codes excluded and reported",
+      "timezone_handling": "UTC; period boundaries at 00:00 UTC on the 1st of the month",
+      "business_owner": "Head of Support",
+      "id": "support_burden",
+      "name": "Support burden",
+      "definition_id": "SUP-1",
+      "business_definition": "Tickets per paying account after resolving customer references",
+      "formula": "count(tickets resolved to entity) / count(paying entities)",
+      "source_systems": [
+        "helpdesk",
+        "billing"
+      ],
+      "required_fields": [
+        "support_tickets.customer_ref",
+        "support_tickets.created_at",
+        "customers.customer_id"
+      ],
+      "grain": "account x period",
+      "time_period": "H1 2026",
+      "known_limitations": [
+        "customer_ref formats inconsistent: normalisation rule required",
+        "1 ticket unresolvable (C099)"
+      ],
+      "use_cases": [
+        "cost to serve",
+        "account risk"
+      ],
+      "status": "draft",
+      "inclusions": [],
+      "exclusions": []
+    }
+  ]
+}

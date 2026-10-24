@@ -2,6 +2,8 @@
 
 101 skills in 12 categories. Each links to its `SKILL.md`. **For** lists who the skill is most useful to (Developer, Tester, Reviewer, Tech Lead, Manager) and which part of the stack it applies to (Backend, Frontend, DevOps, or Any stack).
 
+The 17 Business Intelligence skills are listed separately in the README's Business Intelligence section.
+
 ## Security (14)
 
 | Skill | What it does | For |
