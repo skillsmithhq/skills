@@ -1,6 +1,6 @@
 # Skills index
 
-102 skills in 12 categories. Each links to its `SKILL.md`. **For** lists who the skill is most useful to (Developer, Tester, Reviewer, Tech Lead, Manager) and which part of the stack it applies to (Backend, Frontend, DevOps, or Any stack).
+103 skills in 12 categories. Each links to its `SKILL.md`. **For** lists who the skill is most useful to (Developer, Tester, Reviewer, Tech Lead, Manager) and which part of the stack it applies to (Backend, Frontend, DevOps, or Any stack).
 
 The 17 Business Intelligence skills are listed separately in the README's Business Intelligence section.
 
@@ -87,7 +87,7 @@ The 17 Business Intelligence skills are listed separately in the README's Busine
 | [`tech-debt-register`](skills/tech-debt-register/SKILL.md) | Find, describe, and prioritise technical debt in a codebase area as a register of concrete items with cost, risk, and a suggested fix. | Developer, Tech Lead, Manager · Any stack |
 | [`dependency-upgrade-plan`](skills/dependency-upgrade-plan/SKILL.md) | Plan a major dependency or framework upgrade: what breaks, in what order to change things, and how to ship it safely. | Developer, Tech Lead, Manager · Backend, Frontend |
 
-## CI/CD & deployment (8)
+## CI/CD & deployment (9)
 
 | Skill | What it does | For |
 |---|---|---|
@@ -99,6 +99,7 @@ The 17 Business Intelligence skills are listed separately in the README's Busine
 | [`env-config-rebuild-check`](skills/env-config-rebuild-check/SKILL.md) | Check whether an environment/config change actually takes effect with a restart, or requires a rebuild because the value is baked into the image/bundle at build time. | Developer, Reviewer, Tech Lead · Frontend, DevOps |
 | [`feature-flag-gating-check`](skills/feature-flag-gating-check/SKILL.md) | Check whether a new tenant-visible behavior change should be gated behind the repo's existing feature-flag/tenant-configuration mechanism rather than shipping always-on. | Developer, Tech Lead, Manager · Backend, Frontend |
 | [`pipeline-flakiness-check`](skills/pipeline-flakiness-check/SKILL.md) | Check whether a CI pipeline failure is a real regression or environment/infra flakiness, and that a flaky step isn't silently retried/ignored in a way that masks genuine failures. | Developer, Tester, Tech Lead · DevOps |
+| [`release`](skills/release/SKILL.md) | Create a release branch: ask which branch to cut it from, what to name it, and which commits to bring in, then cherry-pick them and resolve any merge conflicts. | Developer, Tech Lead · Any stack |
 
 ## Operations & reliability (6)
 

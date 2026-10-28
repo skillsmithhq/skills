@@ -1,6 +1,6 @@
 # Skillsmith · Agent Skills
 
-119 skills for AI coding agents: 102 stack-agnostic engineering skills covering security, data, delivery, reliability, cloud cost, testing, and documentation, each adapting to the conventions of the repository in which it is used, and 17 [Business Intelligence skills](#business-intelligence-skills).
+120 skills for AI coding agents: 103 stack-agnostic engineering skills covering security, data, delivery, reliability, cloud cost, testing, and documentation, each adapting to the conventions of the repository in which it is used, and 17 [Business Intelligence skills](#business-intelligence-skills).
 
 **Browse the engineering skills → [INDEX.md](INDEX.md)**
 
