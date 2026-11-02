@@ -1,6 +1,6 @@
 # Skills index
 
-103 skills in 12 categories. Each links to its `SKILL.md`. **For** lists who the skill is most useful to (Developer, Tester, Reviewer, Tech Lead, Manager) and which part of the stack it applies to (Backend, Frontend, DevOps, or Any stack).
+104 skills in 12 categories. Each links to its `SKILL.md`. **For** lists who the skill is most useful to (Developer, Tester, Reviewer, Tech Lead, Manager) and which part of the stack it applies to (Backend, Frontend, DevOps, or Any stack).
 
 The 17 Business Intelligence skills are listed separately in the README's Business Intelligence section.
 
@@ -159,10 +159,11 @@ The 17 Business Intelligence skills are listed separately in the README's Busine
 | [`onboarding-doc`](skills/onboarding-doc/SKILL.md) | Write a getting-started guide that takes a new contributor from clone to running, testing, and shipping a first change, verified against the repo's actual tooling. | Developer, Tech Lead · Any stack |
 | [`repo-map`](skills/repo-map/SKILL.md) | Give agents a map of the codebase by writing an AGENTS.md into each significant directory: what that directory is responsible for, and an index of its files with a one-line brief each. | Developer, Tech Lead · Any stack |
 
-## Project tracking (3)
+## Project tracking (4)
 
 | Skill | What it does | For |
 |---|---|---|
 | [`jira-epic-context`](skills/jira-epic-context/SKILL.md) | Before starting work on a Jira ticket, pull its full context through whatever Jira access is available (Atlassian MCP tools, the Jira REST API or CLI, or text the user pastes) — the ticket itself, its epic, linked tickets, and any linked Confluence page — and summarize what's relevant to the task at hand. | Developer, Tester, Tech Lead · Any stack |
 | [`jira-sprint-hygiene-check`](skills/jira-sprint-hygiene-check/SKILL.md) | Audit a sprint/board for hygiene issues — tickets with no acceptance criteria, no estimate, or stale in "In Progress" — as a board-level check distinct from reviewing one ticket at a time. | Tech Lead, Manager · Any stack |
 | [`jira-test-scenarios`](skills/jira-test-scenarios/SKILL.md) | Read a Jira ticket in full — description, acceptance criteria, every comment, linked tickets, and the epic — and write test scenarios and step-by-step test cases for testers, covering the happy path, negative paths, edge and boundary cases, and decisions that were only made in comments. | Tester, Developer, Tech Lead · Any stack |
+| [`saas-builder`](skills/saas-builder/SKILL.md) | One entry point that takes a SaaS product from idea to a deployed, tested and maintained product with a team of specialist sub-agents (research, spec, UX, architecture, build, testing, CI/CD, budget, marketing, maintenance, a scoped pen test, review), approval gates between stages, and free hosting by default. | Developer, Tech Lead, Manager · Any stack |
