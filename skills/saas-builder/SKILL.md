@@ -71,6 +71,8 @@ Sub-agents cannot answer permission prompts, so any command they need that is no
 
 The orchestrator merges these into `01-research.md` and adds demand signals (what evidence exists that people would pay, and what is still missing) and kill criteria (what result from a cheap test, such as a landing page or waitlist, would show the idea is not worth building). It ends with a verdict: **go**, **pivot** (say to what) or **stop**, with reasons. If the evidence says stop, say so plainly.
 
+**Optional demand test.** On a go or pivot verdict, offer a cheap test before the spec. The orchestrator builds a one-page landing page with an honest description, the planned price or "pricing not set", and a waitlist form. The form uses a provider the user approves, or a plain mailto link. Publishing the page, and any spend on traffic, needs a yes. The page must say the product is not built yet. Record the results against the kill criteria in `01-research.md` before stage 2.
+
 ## Stage 2: Spec (product-spec agent) → `02-spec.md`
 
 - A product summary in one paragraph and the single core job the product does.
@@ -78,6 +80,8 @@ The orchestrator merges these into `01-research.md` and adds demand signals (wha
 - User stories with Given / When / Then acceptance criteria for every Must item. Each story is tagged with a **story group** so that groups can be built independently.
 - Data model: entities, fields, which fields are personal data, and retention.
 - Non-functional requirements: security, privacy, accessibility (WCAG 2.2 AA), performance, and supported browsers or devices.
+- Pricing and plans: free and paid tiers, what each includes, the trial (if any), and what happens on cancellation or non-payment. Prices stay `[PRICE: see 07-budget]` until stage 5.
+- Analytics events: the few events needed to measure the success metrics. Collect no personal data in events unless the spec says why.
 - Success metrics for the first 90 days, each with how it is measured.
 - Effort as a range per story, with assumptions.
 
@@ -94,6 +98,12 @@ The orchestrator checks that the screens and the architecture agree: every scree
 The orchestrator commits the scaffold locally once it builds and passes its test.
 
 2. **developers** (one per story group, in batches of five or fewer, each with `isolation: "worktree"`): each builds its group's stories in small commits with tests. Inputs are validated at the boundary, authorisation is checked on every resource access, and secrets stay out of the repo and the client bundle. Each reports which acceptance criteria it checked and how.
+
+   Cross-cutting pieces belong to their own story group, as the spec says:
+   - Billing, if the product charges. Use the payment provider's test mode and test keys only. Live keys and live mode need the user's yes and are set up by the orchestrator. Build plan limits, upgrade and downgrade, failed-payment handling, and webhooks verified by signature.
+   - Accounts and data rights, if there are user accounts. Users can export their data and delete their account, and deletion reaches every store the data model lists.
+   - Observability. Add the analytics events from the spec, and error tracking on a free tier the user approves, with personal data stripped from error reports.
+   - A kill switch. One flag that turns off any paid or external feature without a deploy.
 3. The orchestrator merges the branches one by one, runs the full test suite after each merge, and sends failures back to the developer who owns them.
 
 If any two story groups touch the same files, use one developer agent that works through them in order, rather than a parallel wave.
@@ -102,7 +112,7 @@ If any two story groups touch the same files, use one developer agent that works
 
 File ownership in this wave: the tester owns the test files, `package.json` (or the stack's equivalent manifest) and the lockfile. The cicd-engineer owns all CI and dependency-bot config (for example Dependabot or Renovate), and asks for any scripts it needs through its report. The budget-analyst, launch-marketer and maintainer write their documents only.
 
-- **tester** → tests in the repo + `05-testing.md`. It writes unit, integration and end-to-end smoke tests for the main flow (using the browser test tool already in the repo, or Playwright if there is none). It also runs an accessibility check (automated plus a keyboard-only pass), checks phone, tablet and desktop widths, and checks the empty, loading and error states. For security, it runs the ecosystem's dependency audit and a secrets scan, and checks input validation, authorisation and security headers. It reports real commands and pass/fail counts. Bugs are listed, not fixed. The orchestrator sends them to a developer agent.
+- **tester** → tests in the repo + `05-testing.md`. It writes unit, integration and end-to-end smoke tests for the main flow (using the browser test tool already in the repo, or Playwright if there is none). It also runs an accessibility check (automated plus a keyboard-only pass), checks phone, tablet and desktop widths, and checks the empty, loading and error states. For performance, it measures page weight and Core Web Vitals (for example with Lighthouse, on the local build) against a budget it states in the report. It checks the latest Chrome, Firefox and Safari where it can, and says which it could not run. If billing exists, it covers billing flows with provider test cards and replayed test webhooks. For security, it runs the ecosystem's dependency audit and a secrets scan, and checks input validation, authorisation and security headers. It reports real commands and pass/fail counts. Bugs are listed, not fixed. The orchestrator sends them to a developer agent.
 - **cicd-engineer** → CI config (`.gitlab-ci.yml` or `.github/workflows/`) + `06-cicd.md`. The pipeline installs, lints, tests and builds on every push and merge request, and deploys from the default branch only. It caches on the lockfile, keeps secrets as masked, protected variables scoped to the deploy job, and documents a rollback path. A scheduled job checks that the live URL responds, as free uptime monitoring.
 - **budget-analyst** → `07-budget.md`. Every cost line (hosting, domain, email, backend, AI or API usage, payment fees, tools) comes from official pricing pages, with provider, plan, price, unit, URL and date checked. It gives the monthly cost now, at 10× usage and at 100× usage, with the assumptions. It lists the free-tier limits and the first thing that forces a paid plan. It checks whether the payment provider supports the user's country, plus its fees and payouts, from the provider's docs. It works out break-even, with price, conversion and churn labelled as assumptions, and says "revenue is not profit". It lists the budget alerts to set.
 - **launch-marketer** → `08-launch.md`. It writes `[PRICE: see 07-budget]` wherever a price is needed, and lists every product claim it makes so the reviewer can check each one. It writes the positioning, plus landing-page and pricing-page copy that follows the honest-marketing rule. Channels must fit the user's constraints, each with weekly effort, cost and how success is measured. It includes a launch checklist (legal pages from a professional, privacy-respecting analytics, support contact, uptime check, backups) and a first-30-days plan tied to the stage 2 metrics.
@@ -158,7 +168,21 @@ It writes only `11-review.md` and lists the findings by severity. The orchestrat
 2. Commit, push, and watch the pipeline until it passes or fails. Fix failures caused by this work and report anything else.
 3. Final report: links to the repo, pipeline and live site; every stage's status from `STATUS.md`; the agents used; open risks; and the next three actions.
 
+## After launch: feature mode
+
+For a new feature or a significant change to a launched product, run a reduced cycle:
+
+1. Spec addendum: append to `02-spec.md`.
+2. UX and architecture deltas: only if screens or modules change.
+3. Build, in a worktree.
+4. Tester.
+5. Pen-tester: only if the change touches auth, data access, payments, file handling, or external calls.
+6. Reviewer.
+7. Push.
+
+Each step has the same gates and ground rules as a full run. Record each feature as a new row in `STATUS.md`. Update `07-budget.md` and `09-maintenance.md` if the change affects costs or operations.
+
 ## Inputs
 
 - The product idea and constraints (asked in stage 0 if not given).
-- Optional: a stage to start or resume from (for example "resume at stage 4"), "unattended" to run gates as checkpoints, or "lean" to use one agent per stage instead of parallel waves (in stage 5, one agent does the five roles in order).
+- Optional: a stage to start or resume from (for example "resume at stage 4"), "unattended" to run gates as checkpoints, "lean" to use one agent per stage instead of parallel waves (in stage 5, one agent does the five roles in order), or "feature: <description>" to run feature mode on an existing product.
