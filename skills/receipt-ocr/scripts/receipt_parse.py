@@ -44,14 +44,29 @@ def normalise(text: str) -> str:
 ZERO_DECIMAL = {"JPY", "KRW", "VND", "CLP", "ISK", "UGX", "PYG", "XAF", "XOF", "RWF", "KMF", "GNF", "VUV", "DJF", "BIF"}
 THREE_DECIMAL = {"BHD", "KWD", "OMR", "JOD", "TND", "LYD", "IQD"}
 
-SYMBOLS = [  # longest first
-    ("VNĐ", "VND"), ("R$", "BRL"), ("US$", "USD"), ("A$", "AUD"), ("C$", "CAD"), ("NZ$", "NZD"), ("S$", "SGD"), ("HK$", "HKD"),
-    ("zł", "PLN"), ("Kč", "CZK"), ("Ft", "HUF"), ("lei", "RON"), ("₹", "INR"), ("€", "EUR"), ("£", "GBP"),
+# Dollar and peso signs with a country prefix (US$, CA$, NZ$, R$ ...). Matched as whole tokens by _DOLLAR_RE, so that
+# "AR$" is never read as Brazil's "R$". Ambiguous prefixes: "C$" is also the Nicaraguan córdoba, "B$" is Bahamas or
+# Brunei; they resolve to the listed default only when no country evidence says otherwise.
+DOLLAR_PREFIX = {
+    "US": "USD", "U": "USD", "CA": "CAD", "C": "CAD", "AU": "AUD", "A": "AUD", "NZ": "NZD", "S": "SGD", "SG": "SGD",
+    "HK": "HKD", "NT": "TWD", "MX": "MXN", "MEX": "MXN", "R": "BRL", "AR": "ARS", "CL": "CLP", "CLP": "CLP",
+    "COL": "COP", "CO": "COP", "RD": "DOP", "J": "JMD", "JA": "JMD", "TT": "TTD", "EC": "XCD", "BZ": "BZD",
+    "BDS": "BBD", "FJ": "FJD", "N": "NAD", "L": "LRD", "SI": "SBD", "CI": "KYD", "GY": "GYD", "SR": "SRD",
+    "BN": "BND", "BSD": "BSD", "Z": "ZWL",
+}
+DOLLAR_PREFIX_AMBIGUOUS = {"C": ["CAD", "NIO"], "B": ["BSD", "BND"]}
+_DOLLAR_RE = re.compile(r"(?<![A-Za-z])([A-Z][A-Za-z]{0,2})\$|\$(U)(?![A-Za-z])")
+
+SYMBOLS = [  # longest first; dollar-prefixed forms are handled by DOLLAR_PREFIX
+    ("VNĐ", "VND"), ("zł", "PLN"), ("Kč", "CZK"), ("Ft", "HUF"), ("lei", "RON"), ("₹", "INR"), ("€", "EUR"), ("£", "GBP"),
     ("₩", "KRW"), ("₫", "VND"), ("฿", "THB"), ("₱", "PHP"), ("₺", "TRY"), ("₽", "RUB"), ("₪", "ILS"),
     ("₦", "NGN"), ("₴", "UAH"), ("₸", "KZT"), ("₲", "PYG"), ("₡", "CRC"), ("₵", "GHS"), ("৳", "BDT"),
     ("₨", "PKR"), ("﷼", "SAR"), ("د.إ", "AED"), ("ر.س", "SAR"), ("د.ك", "KWD"), ("Rp", "IDR"), ("RM", "MYR"),
 ]
-AMBIGUOUS_SYMBOLS = {"$": ["USD", "CAD", "AUD", "MXN", "SGD", "NZD", "HKD"], "¥": ["JPY", "CNY"], "kr": ["SEK", "NOK", "DKK", "ISK"],
+DOLLAR_CURRENCIES = ["USD", "CAD", "AUD", "NZD", "SGD", "HKD", "TWD", "MXN", "ARS", "CLP", "COP", "UYU", "DOP", "BRL",
+                     "JMD", "TTD", "XCD", "BSD", "BBD", "BZD", "BND", "FJD", "NAD", "LRD", "SBD", "KYD", "GYD", "SRD",
+                     "CUP", "NIO", "TOP", "WST", "KID"]
+AMBIGUOUS_SYMBOLS = {"$": DOLLAR_CURRENCIES, "¥": ["JPY", "CNY"], "kr": ["SEK", "NOK", "DKK", "ISK"],
                      "Rs": ["INR", "PKR", "LKR", "NPR"]}
 ISO_CODES = {
     "USD", "EUR", "GBP", "INR", "JPY", "CNY", "RMB", "KRW", "AUD", "CAD", "CHF", "SEK", "NOK", "DKK", "PLN", "CZK", "HUF",
@@ -61,8 +76,30 @@ ISO_CODES = {
 }
 
 
-def detect_currency(lines: list[str], hint: str | None = None) -> tuple[str | None, str]:
-    """Return (ISO code or None, evidence). Explicit ISO codes beat symbols; ambiguous symbols need a hint."""
+# Usual printed symbol per ISO code (for output; detection uses SYMBOLS above).
+CODE_SYMBOL = {"INR": "₹", "SGD": "S$", "THB": "฿", "MYR": "RM", "IDR": "Rp", "CAD": "$", "VND": "₫", "USD": "$",
+               "EUR": "€", "GBP": "£", "JPY": "¥", "CNY": "¥", "KRW": "₩", "AUD": "$", "NZD": "$", "HKD": "$",
+               "PHP": "₱", "TRY": "₺", "RUB": "₽", "ILS": "₪", "NGN": "₦", "UAH": "₴", "PLN": "zł", "CZK": "Kč",
+               "HUF": "Ft", "CHF": "CHF", "SEK": "kr", "NOK": "kr", "DKK": "kr", "BRL": "R$", "MXN": "$", "ZAR": "R",
+               "AED": "د.إ", "SAR": "﷼", "PKR": "Rs", "LKR": "Rs", "NPR": "Rs", "BDT": "৳", "KZT": "₸"}
+
+
+def currency_symbol(lines: list[str], code: str | None) -> str | None:
+    """The symbol actually printed for `code` if one appears, else its usual symbol."""
+    joined = "\n".join(lines)
+    for sym, c in SYMBOLS:
+        if c == code and sym in joined:
+            return sym
+    for sym, options in AMBIGUOUS_SYMBOLS.items():
+        if code in options and re.search(rf"(?<![A-Za-z]){re.escape(sym)}(?![A-Za-z])", joined):
+            return sym
+    return CODE_SYMBOL.get(code) if code else None
+
+
+def detect_currency(lines: list[str], hint: str | None = None, country_currency: str | None = None) -> tuple[str | None, str]:
+    """Return (ISO code or None, evidence). Order: ISO code next to an amount, prefixed dollar sign (US$, CA$ ...),
+    unambiguous symbol, then an ambiguous symbol ($, ¥, kr, Rs) resolved by country evidence or the hint.
+    An ambiguous symbol with nothing to resolve it returns None, so the receipt goes to review."""
     joined = "\n".join(lines)
     # an ISO code counts only next to an amount: "SDN BHD" is a Malaysian company suffix, not Bahraini dinars
     codes = [a or b for a, b in re.findall(r"(?<![A-Za-z])([A-Z]{3})\s?-?\d|\d[\d.,]*\s?([A-Z]{3})(?![A-Za-z])", joined)]
@@ -72,6 +109,19 @@ def detect_currency(lines: list[str], hint: str | None = None) -> tuple[str | No
             if hint and hint.upper() != c:
                 return c, f"code {c} conflicts with hint {hint.upper()}"
             return c, f"code {c}"
+    for m in _DOLLAR_RE.finditer(joined):
+        prefix = m.group(1) or m.group(2)
+        key = prefix.upper()
+        if m.group(2):
+            return "UYU", "symbol $U"
+        if key in DOLLAR_PREFIX_AMBIGUOUS:
+            opts = DOLLAR_PREFIX_AMBIGUOUS[key]
+            pick = next((c for c in (country_currency, hint and hint.upper()) if c in opts), None)
+            if pick:
+                return pick, f"symbol {prefix}$ + {'country' if pick == country_currency else 'hint'}"
+            return None, f"ambiguous symbol {prefix}$ ({' or '.join(opts)}): pass --currency"
+        if key in DOLLAR_PREFIX:
+            return DOLLAR_PREFIX[key], f"symbol {prefix}$"
     for sym, code in SYMBOLS:
         if sym in joined:
             return code, f"symbol {sym}"
@@ -79,6 +129,8 @@ def detect_currency(lines: list[str], hint: str | None = None) -> tuple[str | No
         return "VND", "symbol đ"
     for sym, options in AMBIGUOUS_SYMBOLS.items():
         if re.search(rf"(?<![A-Za-z]){re.escape(sym)}(?![A-Za-z])", joined):
+            if country_currency in options:
+                return country_currency, f"symbol {sym} + country on receipt"
             if hint and hint.upper() in options:
                 return hint.upper(), f"symbol {sym} + hint"
             if sym == "Rs" and re.search(r"\b\d{2}[A-Z]{5}\d{4}[A-Z][1-9A-Z]Z[0-9A-Z]\b", joined.upper()):
@@ -87,6 +139,10 @@ def detect_currency(lines: list[str], hint: str | None = None) -> tuple[str | No
     if hint:
         return hint.upper(), "hint only"
     return None, "no currency found"
+
+
+# Officially two decimals, but receipts often print whole units ("Rp 58.000"), so amounts need not show decimals.
+LOOSE_DECIMALS = {"IDR", "HUF", "COP", "ARS", "PYG", "LKR", "PKR", "NGN", "KES", "UZS"}
 
 
 def decimals_for(currency: str | None) -> int | None:
@@ -138,13 +194,13 @@ def parse_amount(token: str, decimals: int | None = None, decimal_sep: str | Non
     return -d if neg else d
 
 
-_PREFIXES = sorted(ISO_CODES | {"RM", "Rp", "Rs", "VNĐ", "S$", "US$", "A$", "C$", "NZ$", "HK$", "R$"}, key=len, reverse=True)
+_PREFIXES = sorted(ISO_CODES | {"RM", "Rp", "Rs", "VNĐ"} | {p + "$" for p in DOLLAR_PREFIX} | {"B$", "$"}, key=len, reverse=True)
 _GLUED = re.compile(r"(?<![A-Za-z])(" + "|".join(re.escape(p) for p in _PREFIXES) + r")\.?(?=-?\d)")
 _ID_LINE = re.compile(r"(gstin|gst\s?reg|reg(istration)?\s?no|tax\s?id|tin\b|vat\s?(no|reg|id)|mst\b|npwp|abn\b|sst\s?no|"
                       r"gst/hst|#\s?\d{6,}|เลขประจำตัว|uen\b)", re.I)
 
 
-def amounts_in(line: str, decimals: int | None, decimal_sep: str | None = None) -> list[Decimal]:
+def amounts_in(line: str, decimals: int | None, decimal_sep: str | None = None, money_only: bool = False) -> list[Decimal]:
     """Amounts on a line. Registration-number lines, masked card numbers and long bare digit runs are not amounts."""
     if _ID_LINE.search(line) or re.search(r"[x*•]{2,}[\s-]?\d", line, re.I):
         return []
@@ -154,6 +210,8 @@ def amounts_in(line: str, decimals: int | None, decimal_sep: str | None = None) 
         tok = m.group(2)
         if re.fullmatch(r"\d{8,}", tok):
             continue
+        if money_only and not re.search(r"[.,]\d{2}$", tok):
+            continue  # a 2-decimal currency: invoice numbers, phone numbers and quantities are not amounts
         if " " in tok and not re.fullmatch(r"\d{1,3}( \d{3})+([.,]\d{1,2})?", tok):
             for piece in tok.split(" "):  # "1 41,000" is a quantity and a price, not 141,000
                 v = parse_amount(piece, decimals, decimal_sep)
@@ -169,10 +227,11 @@ def amounts_in(line: str, decimals: int | None, decimal_sep: str | None = None) 
 # ---------------------------------------------------------------- keywords (lower-cased, normalised)
 
 KW = {
-    "subtotal": ["subtotal", "sub total", "sub-total", "zwischensumme", "sous-total", "sous total", "subtotale",
+    "subtotal": ["subtotal", "sub total", "sub-total", "subttl", "sub ttl", "zwischensumme", "sous-total", "sous total", "subtotale",
                  "subtotaal", "suma częściowa", "mezisoučet", "részösszeg", "промежуточный итог", "ara toplam",
-                 "小计", "小計", "소계", "المجموع الفرعي", "סכום ביניים", "ยอดรวมย่อย", "tạm tính", "thành tiền", "cộng tiền hàng", "subjumlah", "รวมเงิน", "รวมย่อย"],
-    "total": ["grand total", "grandtotal", "net amount", "due", "net total", "nett total", "total due", "amount due", "balance due", "total amount", "amount payable", "to pay",
+                 "小计", "小計", "소계", "المجموع الفرعي", "סכום ביניים", "ยอดรวมย่อย", "tạm tính", "thành tiền", "total exclude", "total excluding", "total excl", "excluding gst", "excluded gst",
+                 "exclude gst", "excl gst", "excl. gst", "before tax", "before gst", "sebelum cukai", "cộng tiền hàng", "subjumlah", "รวมเงิน", "รวมย่อย"],
+    "total": ["grand total", "grandtotal", "net amount", "due", "total inclusive", "total incl", "inc. gst", "inc gst", "net total", "nett total", "total due", "amount due", "balance due", "total amount", "amount payable", "to pay",
               "total", "gesamtbetrag", "gesamt", "summe", "zu zahlen", "endbetrag", "total ttc", "net à payer",
               "montant", "à payer", "totale", "importe", "total a pagar", "a pagar", "totaal", "te betalen",
               "razem", "do zapłaty", "suma", "celkem", "k úhradě", "összesen", "fizetendő", "итого", "всего",
@@ -185,7 +244,7 @@ KW = {
             "ust", "umsatzsteuer", "tva", "iva", "btw", "moms", "mva", "alv", "dph", "áfa", "ptu", "ндс", "kdv",
             "税", "税额", "消費税", "內含稅", "부가세", "세액", "ضريبة", "القيمة المضافة", "מע\"מ", "מע״מ", "ppn",
             "pajak", "pb1", "sst", "service tax", "tps", "tvq", "tvh", "ภาษี", "thuế", "gtgt", "jct"],
-    "rounding": ["rounding adj", "rounding adjustment", "rounding", "round off", "round-off", "pembundaran",
+    "rounding": ["rounding adj", "rounding adjustment", "rounding", "round amt", "round amount", "round off", "round-off", "pembundaran",
                  "pelarasan", "làm tròn", "arrondi", "redondeo", "rundung"],
     "tip": ["tip", "gratuity", "service charge", "service", "trinkgeld", "bedienung", "pourboire", "propina",
             "mancia", "servizio", "服务费", "服務費", "サービス料", "봉사료", "बख्शीश", "إكرامية"],
@@ -196,8 +255,36 @@ KW = {
                   "reszta", "zdáno", "сдача", "наличные", "para üstü", "nakit", "växel", "找零", "找赎", "现金",
                   "現金", "お釣り", "お預り", "거스름돈", "받은금액", "현금", "बाकी", "نقدا", "الباقي", "עודף", "เงินทอน",
                   "เงินสด", "tiền thừa", "kembalian", "tunai", "points", "savings", "you saved"],
-    "item_count": ["items", "item count", "qty", "anzahl", "artikel", "articles", "件", "点", "개"],
+    "item_count": ["items", "item", "item count", "qty", "quantity", "pcs", "jumlah item", "jml item", "anzahl", "artikel",
+                   "articles", "件", "点", "개"],
 }
+
+
+# Lines that name the amount actually payable win over other "total" lines (gross totals before rounding,
+# "total supplies" on adjustment notes, totals before a discount).
+PAYABLE = ["total payable", "amount payable", "net payable", "payable", "amount due", "total due", "balance due",
+           "grand total", "grandtotal", "net amount", "to pay", "jumlah bayaran",
+           "jumlah perlu dibayar", "à payer", "net à payer", "zu zahlen", "a pagar", "te betalen", "do zapłaty",
+           "k úhradě", "к оплате", "应付", "應付", "ご請求額", "결제금액", "ยอดสุทธิ", "tổng thanh toán"]
+
+
+def _is_payable(line_lc: str) -> bool:
+    return any((re.search(rf"(?<![a-z]){re.escape(k)}(?![a-z])", line_lc) if k.isascii() else k in line_lc) for k in PAYABLE)
+
+
+def choose_total(totals: list, lines_n: list, roundings: list | None = None) -> tuple | None:
+    """Pick the amount actually paid: the first total after a rounding line, else the last payable-labelled line
+    ("Total Payable", "Grand Total", "Amount Due"), else the largest total."""
+    if not totals:
+        return None
+    if roundings:
+        after = [c for c in totals if c[0] > roundings[-1][0]]
+        if after:
+            return after[0]
+    payable = [c for c in totals if _is_payable(lines_n[c[0]].lower())]
+    if payable:
+        return payable[-1]
+    return max(totals, key=lambda c: (c[1], c[0]))
 
 
 def has_kw(line_lc: str, kind: str) -> str | None:
@@ -303,6 +390,15 @@ def find_date(lines: list[str], order: str | None = None) -> tuple[str | None, s
     return None, None, notes
 
 
+def all_dates(lines: list[str], order: str | None) -> set[str]:
+    found = set()
+    for l in lines:
+        d, _, _ = find_date([l], order)
+        if d:
+            found.add(d)
+    return found
+
+
 def find_time(lines: list[str]) -> str | None:
     for line in lines:
         m = re.search(r"(?<!\d)([01]?\d|2[0-3])[:h]([0-5]\d)(?::([0-5]\d))?\s?(am|pm|AM|PM)?(?!\d)", line)
@@ -384,6 +480,8 @@ class Receipt:
     date: Field = field(default_factory=Field)
     time: Field = field(default_factory=Field)
     currency: Field = field(default_factory=Field)
+    currency_symbol: str | None = None
+    address: dict = field(default_factory=dict)
     subtotal: Field = field(default_factory=Field)
     tax: Field = field(default_factory=Field)
     tip: Field = field(default_factory=Field)
@@ -412,7 +510,7 @@ def _line_conf(confs: list[float] | None, i: int) -> float:
 
 
 def parse_receipt(lines: list[str], confs: list[float] | None = None, currency_hint: str | None = None,
-                  date_order: str | None = None, decimal_sep: str | None = None) -> Receipt:
+                  date_order: str | None = None, decimal_sep: str | None = None, country_hint: str | None = None) -> Receipt:
     """Parse OCR lines (top to bottom) into a Receipt. `confs` are per-line OCR confidences (0-1)."""
     raw = [mask_pan(normalise(l)).strip() for l in lines]
     keep = [i for i, l in enumerate(raw) if l]
@@ -420,19 +518,37 @@ def parse_receipt(lines: list[str], confs: list[float] | None = None, currency_h
     confs_n = [_line_conf(confs, i) for i in keep]
     r = Receipt()
 
-    cur, ev = detect_currency(lines_n, currency_hint)
+    try:
+        from receipt_address import find_address, currency_for_country
+        r.address = find_address(lines_n, country_hint)
+    except ImportError:  # running without the address module
+        r.address, currency_for_country = {}, (lambda cc: None)
+    country = r.address.get("country") or (country_hint.upper() if country_hint else None)
+    cur, ev = detect_currency(lines_n, currency_hint, currency_for_country(country) if country else None)
     r.currency = Field(cur, ev, 0.5 if "conflicts" in ev else (0.99 if cur and ev != "hint only" else (0.9 if cur else 0.0)),
                        ["from the --currency hint, not printed on the receipt"] if ev == "hint only" else [])
+    m_sym = re.match(r"symbol (\S+)", ev)
+    r.currency_symbol = m_sym.group(1) if m_sym else currency_symbol(lines_n, cur)
     if cur is None:
         r.warnings.append(ev)
     dec = decimals_for(cur)
+    money = dec == 2 and cur not in LOOSE_DECIMALS
 
     d, dline, dnotes = find_date(lines_n, date_order)
+    if d:
+        age = (date.today() - date.fromisoformat(d)).days
+        if age > 3650 or age < -2:  # older than ten years or in the future: almost always a misread or a wrong date
+            dnotes = dnotes + [f"suspect: date is {'in the future' if age < 0 else f'{age // 365} years old'}"]
+    if d and len(dates := all_dates(lines_n, date_order)) > 1:
+        dnotes = dnotes + [f"suspect: several different dates on the receipt {sorted(dates)}"]
     shaky = any("ambiguous" in n or "non-Gregorian" in n or n.startswith("suspect") for n in dnotes)
     r.date = Field(d, dline, (0.7 if shaky else 0.95) if d else 0.0, dnotes)
     r.time = Field(find_time(lines_n), None, 0.9)
 
+    addr_lines = set(r.address.get("lines") or [])
     for i, l in enumerate(lines_n[:5]):
+        if l in addr_lines:
+            continue
         letters = sum(c.isalpha() for c in l)
         if letters >= 3 and letters / max(len(l), 1) > 0.5 and not amounts_in(l, dec) and not re.search(r"\d{3,}", l):
             r.merchant = Field(l, l, round(0.6 * confs_n[i], 3), ["top-of-receipt heuristic"])
@@ -442,15 +558,16 @@ def parse_receipt(lines: list[str], confs: list[float] | None = None, currency_h
     first_summary = None
     for i, l in enumerate(lines_n):
         lc = l.lower()
-        amts = amounts_in(l, dec, decimal_sep)
+        amts = amounts_in(l, dec, decimal_sep, money)
         if not amts and re.fullmatch(r"[^\d]*", l) and any(has_kw(lc, k) for k in ("total", "subtotal", "tax", "discount")):
             for j in (i + 1, i - 1):  # label and value printed on separate lines
-                if 0 <= j < len(lines_n) and (a := amounts_in(lines_n[j], dec, decimal_sep)) and \
+                if 0 <= j < len(lines_n) and (a := amounts_in(lines_n[j], dec, decimal_sep, money)) and \
                         not any(has_kw(lines_n[j].lower(), k) for k in ("total", "subtotal", "tax", "not_total", "discount", "tip")):
                     amts = a
                     break
-        if amts and has_kw(lc, "item_count") and has_kw(lc, "total") and not re.search(r"\d[.,]\d{3}|\d[.,]\d{2}\b", l):
-            continue  # "TOTAL QTY 2"
+        if amts and has_kw(lc, "item_count") and has_kw(lc, "total") and not _is_payable(lc) and \
+                not re.search(r"\d[.,]\d{3}|\d[.,]\d{2}\b", l.split(has_kw(lc, "item_count"))[-1] if has_kw(lc, "item_count") in l else l):
+            continue  # "TOTAL QTY 2", "Total Item: 2"
         if not amts:
             if has_kw(lc, "total") and not has_kw(lc, "subtotal") and re.search(r"\d", l) and not _ID_LINE.search(l):
                 r.warnings.append(f"total line unreadable: {l}")
@@ -458,25 +575,36 @@ def parse_receipt(lines: list[str], confs: list[float] | None = None, currency_h
         val = amts[-1]
         if has_kw(lc, "not_total"):
             continue
+        is_tax, is_total = bool(has_kw(lc, "tax")), bool(has_kw(lc, "total"))
+        if is_tax and is_total:  # "Total GST" is tax, "Total incl. GST" is the total, "Total excl. GST" the subtotal
+            if re.search(r"incl|inc\.|inclusive|including|termasuk|ttc", lc):
+                is_tax = False
+            elif re.search(r"excl|exclud|before|sebelum|\bht\b", lc):
+                subtotals.append((i, val)); first_summary = first_summary if first_summary is not None else i
+                continue
+            else:
+                is_total = False
+        if is_total and len(amts) >= 2 and amts[-1] < amts[0] and re.search(r"%|\bsr\b|\bzr\b|gst|vat|tax", lc):
+            continue  # a tax summary table row: taxable amount then tax
         if has_kw(lc, "rounding"):
             roundings.append((i, val)); first_summary = first_summary if first_summary is not None else i
         elif has_kw(lc, "subtotal"):
             subtotals.append((i, val)); first_summary = first_summary if first_summary is not None else i
         elif has_kw(lc, "discount"):
             discounts.append((i, abs(val))); first_summary = first_summary if first_summary is not None else i
-        elif has_kw(lc, "tax") and not has_kw(lc, "total"):
+        elif is_tax:
             if "%" in l and len(amts) == 1 and val < 100 and not re.search(r"\d[.,]\d{2}\b", l.split("%")[-1]):
                 continue  # a bare rate line such as "VAT 20%"
             taxes.append((i, val)); first_summary = first_summary if first_summary is not None else i
         elif has_kw(lc, "tip") and not has_kw(lc, "tax"):
             tips.append((i, val)); first_summary = first_summary if first_summary is not None else i
-        elif has_kw(lc, "total"):
+        elif is_total:
             totals.append((i, val)); first_summary = first_summary if first_summary is not None else i
 
     def pick(cands, name):
         if not cands:
             return Field()
-        i, v = cands[-1] if name == "subtotal" else max(cands, key=lambda c: (c[1], c[0]))
+        i, v = cands[-1] if name == "subtotal" else choose_total(cands, lines_n, roundings)
         return Field(v, lines_n[i], round(confs_n[i], 3), ["keyword match"])
 
     r.subtotal = pick(subtotals, "subtotal")
@@ -492,13 +620,13 @@ def parse_receipt(lines: list[str], confs: list[float] | None = None, currency_h
         r.reconciliation["rounding"] = sum(v for _, v in roundings)
     r.total = pick(totals, "total")
     if r.total.value is not None:
-        t_idx = max(totals, key=lambda c: (c[1], c[0]))[0]
-        above = [i for i, _ in taxes + subtotals if i > t_idx]
+        t_idx = choose_total(totals, lines_n, roundings)[0]
+        above = [i for i, _ in taxes + subtotals if i > t_idx and len(amounts_in(lines_n[i], dec, decimal_sep, money)) == 1]
         if above:
             r.total.checks.append("total line is above tax or subtotal lines")
     if r.total.value is None:
         bottom = [(i, a[-1]) for i, l in enumerate(lines_n) if i >= len(lines_n) // 2
-                  and (a := amounts_in(l, dec, decimal_sep)) and not has_kw(l.lower(), "not_total")]
+                  and (a := amounts_in(l, dec, decimal_sep, money)) and not has_kw(l.lower(), "not_total")]
         if bottom:
             i, v = max(bottom, key=lambda c: c[1])
             r.total = Field(v, lines_n[i], round(0.4 * confs_n[i], 3), ["no total keyword: largest amount in lower half"])
@@ -507,7 +635,7 @@ def parse_receipt(lines: list[str], confs: list[float] | None = None, currency_h
     # line items: amount-ending lines above the first summary line
     stop = first_summary if first_summary is not None else len(lines_n)
     for i, l in enumerate(lines_n[:stop]):
-        amts = amounts_in(l, dec, decimal_sep)
+        amts = amounts_in(l, dec, decimal_sep, money)
         if not amts or l == r.merchant.value or l == r.date.evidence:
             continue
         desc = _AMOUNT_RE.sub("", l).strip(" .:-*x×@")
@@ -562,4 +690,5 @@ def _reconcile(r: Receipt, dec: int | None) -> None:
             r.total.checks.append("reconciles with line items")
     if tot is not None and tot < 0:
         r.warnings.append("negative total (refund?)")
+        r.total.checks.append("negative total: credit note or refund")
     r.reconciliation = rec

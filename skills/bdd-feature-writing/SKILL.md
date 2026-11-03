@@ -7,7 +7,7 @@ description: "Turn a requirement, user story or ticket into BDD feature files in
 
 ## Instructions
 
-1. Detect the BDD setup first: the framework (for example Cucumber for JavaScript/Java/Ruby, Reqnroll or SpecFlow for .NET, Behave or pytest-bdd for Python, Behat for PHP, Godog for Go), where `.feature` files live, the spoken language used in them, existing tags, and the step phrasing already in use. Reuse existing step wording wherever it fits, so new scenarios run with existing step definitions.
+1. Detect the BDD setup first: the framework (for example Cucumber for JavaScript/Java/Ruby, Reqnroll for .NET, where older repos may still use SpecFlow, end-of-life since 31 December 2024; Behave or pytest-bdd for Python, Behat for PHP, Godog for Go), where `.feature` files live, the spoken language used in them, existing tags, and the step phrasing already in use. Reuse existing step wording wherever it fits, so new scenarios run with existing step definitions.
 2. Read the requirement in full, including acceptance criteria and any comments that changed it. List the behaviours (business rules), and the questions the requirement leaves open. Ask about open questions rather than inventing answers.
 3. Write one `Feature` per capability, with a short description of who benefits and why. Use `Rule` (Gherkin 6+) to group scenarios by business rule if the framework supports it.
 4. For each rule, write scenarios that cover the main path, the important alternative and negative paths, and boundaries:

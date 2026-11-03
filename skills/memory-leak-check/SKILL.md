@@ -25,7 +25,7 @@ The memory curve before and after (environment, load, duration), the growing obj
 ## Constraints
 
 - Heap snapshots can contain personal data and secrets. Take them in non-production environments where possible, store them securely, and delete them afterwards.
-- Taking a heap dump can pause a process; ask before doing it in production.
+- Taking a heap dump pauses the process and can need memory up to the size of the heap again, which can crash it; ask before doing it in production, and only on an instance that can fail without an outage.
 - Raising the memory limit or adding scheduled restarts hides a leak; it is not a fix.
 
 ## Examples

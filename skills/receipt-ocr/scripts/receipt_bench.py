@@ -64,7 +64,7 @@ def money(v: Decimal, style: str, dec: int = 2) -> str:
 
 def lines_for(region: str, rng: random.Random):
     """Return (lines, truth, hints) for one synthetic receipt."""
-    d = date(2025, 1, 1) + timedelta(days=rng.randrange(0, 700))
+    d = date.today() - timedelta(days=rng.randrange(1, 900))  # recent past dates, as on real receipts
     n = rng.randint(1, 7)
     hints = {"currency": None, "date_order": "DMY"}
     tax_lines, extra, inclusive = [], [], False

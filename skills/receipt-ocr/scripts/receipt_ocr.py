@@ -22,6 +22,7 @@ import json
 import os
 import sys
 from collections import Counter
+from decimal import Decimal
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -207,25 +208,46 @@ def vote(parses: dict, min_conf: float) -> dict:
         checks = sorted(set.intersection(*[set(v["checks"]) for v in agreeing]))  # must hold in every agreeing run
         flags = {c for v in agreeing for c in v["checks"]}
         reasons = []
-        if len(counts) > 1:
-            reasons.append(f"runs disagree: {dict(counts)}")
-        if n < len(parses):
-            reasons.append(f"only {n} of {len(parses)} runs found this value")
+        verified = None
+        if f == "total":
+            # verified majority: runs whose own arithmetic confirms their total, with no keyword/position doubt
+            ok_runs = [v for _, v in vals if any("reconciles" in c for c in v["checks"])
+                       and not any(c.startswith(("no total keyword", "total line is above")) for c in v["checks"])]
+            ok_vals = Counter(str(v["value"]) for v in ok_runs)
+            if len(ok_vals) == 1 and len(ok_runs) >= 2:
+                verified = next(iter(ok_vals))
+            elif len(ok_vals) > 1:
+                reasons.append(f"runs reconcile to different totals: {dict(ok_vals)}")
+        if verified is not None:
+            best, n = verified, counts[verified]
+            agreeing = [v for _, v in vals if str(v["value"]) == best and any("reconciles" in c for c in v["checks"])]
+            conf = max(v["confidence"] for v in agreeing)
+            checks = sorted(set.intersection(*[set(v["checks"]) for v in agreeing]))
+            flags = {c for v in agreeing for c in v["checks"]}
+        else:
+            if len(counts) > 1:
+                reasons.append(f"runs disagree: {dict(counts)}")
+            if n < max(2, (len(parses) + 1) // 2) or (f in CRITICAL and f != "total" and n < len(vals)):
+                reasons.append(f"only {n} of {len(parses)} runs found this value")
         if f in CRITICAL and len(parses) < 2:
             reasons.append("single run: no cross-check (use two engines or image variants)")
         if conf < min_conf:
             reasons.append(f"confidence {conf:.2f} below {min_conf}")
-        if f == "total" and not any("reconciles" in c for c in checks):
-            reasons.append("total not confirmed by arithmetic in every run")
-        if f == "total" and any(c.startswith("no total keyword") or c.startswith("total line is above") for c in flags):
-            reasons.append("total position or keyword not confirmed")
-        if f == "total" and any(w.startswith("total line unreadable") for p in parses.values() for w in p["warnings"]):
-            reasons.append("a run could not read the total line")
+        if f == "total" and any(c.startswith("negative total") for c in flags):
+            reasons.append("negative total: credit note or refund, check by hand")
+        if f == "total" and verified is None:
+            if not any("reconciles" in c for c in checks):
+                reasons.append("total not confirmed by arithmetic in every run")
+            if any(c.startswith("no total keyword") or c.startswith("total line is above") for c in flags):
+                reasons.append("total position or keyword not confirmed")
+            if any(w.startswith("total line unreadable") for p in parses.values() for w in p["warnings"]):
+                reasons.append("a run could not read the total line")
         if f == "date" and any("ambiguous" in c or "non-Gregorian" in c or c.startswith("suspect") for c in flags):
             reasons.append("date format ambiguous")
         if f == "merchant":
             reasons.append("merchant name is heuristic")
         out["fields"][f] = {"value": best, "status": "review" if reasons else "accepted", "agreement": f"{n}/{len(parses)}",
+                            "rule": "verified majority" if verified is not None else "unanimous",
                             "confidence": conf, "checks": checks, "reasons": reasons,
                             "evidence": agreeing[0]["evidence"]}
     best_run = max(parses, key=lambda k: (bool(parses[k]["reconciliation"].get("totals_reconcile")),
@@ -234,11 +256,54 @@ def vote(parses: dict, min_conf: float) -> dict:
     out["line_items_from"] = best_run
     out["reconciliation"] = parses[best_run]["reconciliation"]
     out["tax_ids"] = parses[best_run]["tax_ids"]
+    out["currency_symbol"] = parses[best_run].get("currency_symbol")
+    addrs = [p.get("address") or {} for p in parses.values()]
+    best_addr = max(addrs, key=lambda a: (a.get("confidence") or 0, len(a.get("lines") or [])))
+    countries = Counter(a.get("country") for a in addrs if a.get("country"))
+    out["address"] = best_addr
+    if countries:
+        cc, n = countries.most_common(1)[0]
+        out["country"] = {"value": cc, "evidence": best_addr.get("country_evidence"), "agreement": f"{n}/{len(parses)}"}
     out["payment"] = parses[best_run]["payment"]
     out["warnings"] = sorted({w for p in parses.values() for w in p["warnings"]})
     crit = [out["fields"][f]["status"] for f in CRITICAL]
     out["status"] = "accepted" if all(s == "accepted" for s in crit) else "review"
     return out
+
+
+TRUSTED_QR = {"emvco", "upi", "zatca", "pt-atcud"}  # formats whose structure or checksum we can validate
+
+
+def apply_qr(res: dict, parses: dict, qrs: list[dict]) -> None:
+    """Use machine-readable QR data printed on the receipt to confirm or challenge OCR values.
+    A trusted QR amount equal to a value some OCR run read confirms the total; a different amount sends it to review."""
+    res["qr"] = [{k: q.get(k) for k in ("format", "amount", "currency", "country", "date", "tax", "seller_tax_id", "checks", "warnings")}
+                 for q in qrs]
+    trusted = [q for q in qrs if q.get("format") in TRUSTED_QR and "crc failed" not in (q.get("warnings") or [])]
+    fields = res["fields"]
+    run_totals = {str(p["total"]["value"]) for p in parses.values() if p["total"]["value"] is not None}
+    for q in trusted:
+        if q.get("amount"):
+            amt = Decimal(q["amount"])
+            match = next((v for v in run_totals if Decimal(v) == amt), None)
+            t = fields["total"]
+            if match is not None:
+                t.update({"value": match, "status": "accepted", "rule": f"confirmed by {q['format']} QR", "reasons": []})
+            else:
+                t["status"] = "review"
+                t.setdefault("reasons", []).append(f"{q['format']} QR amount {amt} differs from OCR")
+        if q.get("currency"):
+            c = fields["currency"]
+            if c.get("value") in (None, q["currency"]):
+                c.update({"value": q["currency"], "status": "accepted", "rule": f"confirmed by {q['format']} QR", "reasons": []})
+            else:
+                c["status"] = "review"
+                c.setdefault("reasons", []).append(f"{q['format']} QR currency {q['currency']} differs")
+        if q.get("date") and fields["date"].get("value") == q["date"][:10]:
+            fields["date"].update({"status": "accepted", "rule": f"confirmed by {q['format']} QR", "reasons": []})
+        if q.get("country"):
+            res.setdefault("country", {"value": q["country"], "evidence": f"{q['format']} QR"})
+    res["status"] = "accepted" if all(fields[f]["status"] == "accepted" for f in CRITICAL) else "review"
 
 
 def process(path: Path, args) -> dict:
@@ -259,14 +324,22 @@ def process(path: Path, args) -> dict:
                     errors[f"{eng}/{vname}"] = f"{type(e).__name__}: {e}"
                     continue
                 lines, confs = to_lines(words, rtl=langs[0] in RTL)
-                rec = parse_receipt(lines, confs, args.currency, args.date_order, args.decimal_sep)
+                rec = parse_receipt(lines, confs, args.currency, args.date_order, args.decimal_sep, getattr(args, "country", None))
                 parses[f"{eng}/{vname}"] = rec.to_dict()
                 if args.keep_text:
                     parses[f"{eng}/{vname}"]["lines"] = lines
+                    parses[f"{eng}/{vname}"]["line_confs"] = confs
         if not parses:
             results.append({"file": str(path), "page": pi + 1, "status": "error", "errors": errors})
             continue
         res = vote(parses, args.min_conf)
+        try:
+            from receipt_qr import qr_fields
+            apply_qr(res, parses, qr_fields(vs.get("original", page)))
+        except ImportError:  # OpenCV not installed: no QR decoding
+            pass
+        except Exception as e:
+            errors["qr"] = f"{type(e).__name__}: {e}"
         res.update({"file": str(path), "page": pi + 1, "engines": engines, "errors": errors})
         if args.keep_text:
             res["runs_detail"] = parses
@@ -279,7 +352,8 @@ def main() -> None:
     ap.add_argument("inputs", nargs="+", help="image/PDF files or folders")
     ap.add_argument("--lang", default="en", help="comma-separated ISO 639-1 codes, main script first (e.g. ar,en)")
     ap.add_argument("--engine", default="auto", help="auto, or comma list of rapidocr,paddle,tesseract,easyocr")
-    ap.add_argument("--currency", help="ISO code to resolve $, ¥ or kr")
+    ap.add_argument("--currency", help="ISO code to resolve $, ¥, kr or Rs")
+    ap.add_argument("--country", help="ISO 3166 alpha-2 code, used when the receipt does not show its country")
     ap.add_argument("--date-order", choices=["DMY", "MDY"], help="day/month order for dates like 04/05/2026; "
                     "without it such dates are assumed DMY and sent to review")
     ap.add_argument("--decimal-sep", choices=[".", ","], help="locale decimal separator, for 1.234 style ambiguity")
