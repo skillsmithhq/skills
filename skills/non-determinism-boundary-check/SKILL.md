@@ -1,6 +1,6 @@
 ---
 name: non-determinism-boundary-check
-description: "Check where a system draws the line between deterministic business logic and non-deterministic model output — money, permissions, and irreversible actions should be enforced in deterministic code, with model output as input to that logic, never the final authority."
+description: "Check where a system draws the line between deterministic business logic and non-deterministic model output — money, permissions, and irreversible actions should be enforced in deterministic code, with model output as input to that logic, never the final authority. Use when model output drives a consequential decision."
 ---
 
 # non-determinism-boundary-check

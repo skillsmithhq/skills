@@ -1,6 +1,6 @@
 ---
 name: saas-builder
-description: "One entry point that takes a SaaS product from idea to a deployed, tested and maintained product, using a team of specialist sub-agents: research, spec, UI/UX, architecture, development, testing, CI/CD, budget, launch and marketing, maintenance, a scoped penetration test of the product's own build, and an independent reviewer. The main session orchestrates, runs agents in parallel where their work does not overlap, and stops at an approval gate after each stage. Defaults to free hosting and asks before anything that costs money or publishes. Use when asked to build a SaaS end to end, go from idea to launch, or plan and ship a new product."
+description: "One entry point that takes a SaaS product from idea to a deployed, tested and maintained product with a team of specialist sub-agents: research, spec, UX, architecture, build, testing, CI/CD, budget, launch, maintenance, a scoped pen test of its own build, and an independent review. Runs agents in parallel where safe, stops at an approval gate after each stage, defaults to free hosting, and asks before spending or publishing. Use when asked to build a SaaS end to end, go from idea to launch, or ship a new product."
 ---
 
 # saas-builder

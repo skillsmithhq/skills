@@ -1,13 +1,13 @@
 ---
 name: ai-cost-per-request-check
-description: "Check that an AI-powered feature's per-request cost has been estimated against expected production traffic, since a feature cheap to prototype can become expensive to run at scale."
+description: "Check that an AI-powered feature's per-request cost has been estimated against expected production traffic, since a feature cheap to prototype can become expensive to run at scale. Use when reviewing a feature that calls an LLM or other paid model API."
 ---
 
 # ai-cost-per-request-check
 
 ## Instructions
 
-Estimate tokens per call (input + output, including retries) × expected calls at real traffic, checked against actual model pricing. Check specifically for an agentic loop with multiple calls per action, an uncapped retry path, or a per-row batch job.
+Identify the provider and model the feature actually calls (from config or code). Estimate tokens per call (input + output, including retries) × expected calls at real traffic, priced from the provider's current published pricing (look it up and note the date; don't rely on memory). Check specifically for an agentic loop with multiple calls per action, an uncapped retry path, or a per-row batch job.
 
 ## Inputs
 
@@ -15,7 +15,7 @@ Estimate tokens per call (input + output, including retries) × expected calls a
 
 ## Outputs
 
-A cost estimate against expected traffic, or a flag that no estimate exists.
+A cost estimate against expected traffic, with the pricing source and date and the assumptions used, or a flag that no estimate exists.
 
 ## Constraints
 

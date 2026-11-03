@@ -1,13 +1,13 @@
 ---
 name: agent-prompt-injection-check
-description: "Check that code feeding external/untrusted content into an LLM prompt treats it strictly as data, never as instructions, and that no destructive tool call executes based solely on model output influenced by that content."
+description: "Check that code feeding external/untrusted content into an LLM prompt treats it strictly as data, never as instructions, and that no destructive tool call executes based solely on model output influenced by that content. Use when reviewing code that puts fetched pages, files, emails, retrieved documents, or tool results into a prompt."
 ---
 
 # agent-prompt-injection-check
 
 ## Instructions
 
-Confirm untrusted content is clearly delimited and framed as data in the prompt. Check what tools/actions are reachable from a response generated while processing untrusted content, and whether any are destructive without a separate confirmation step.
+Identify where untrusted content enters and how the repo's LLM SDK or framework exposes tool calls. Confirm untrusted content is clearly delimited and framed as data in the prompt. Check what tools/actions are reachable from a response generated while processing untrusted content, and whether any are destructive without a separate confirmation step.
 
 ## Inputs
 

@@ -1,13 +1,13 @@
 ---
 name: agent-context-window-budget-check
-description: "Check that an agent's prompt construction doesn't blindly dump full documents/history into context without a size budget, risking silent truncation of exactly the part that mattered."
+description: "Check that an agent's prompt construction doesn't blindly dump full documents/history into context without a size budget, risking silent truncation of exactly the part that mattered. Use when reviewing code that assembles LLM prompts from documents, chat history, or tool results."
 ---
 
 # agent-context-window-budget-check
 
 ## Instructions
 
-Check that variable-length input is size-checked before insertion. Confirm truncation, when it happens, deliberately drops the least important content (oldest turns, summarized overflow) rather than an arbitrary cut. In a tool-use loop, confirm accumulated tool results are capped or summarized, not kept verbatim forever.
+Identify how the repo builds prompts first (the LLM SDK or framework in use, and its token-counting method if any). Check that variable-length input is size-checked before insertion. Confirm truncation, when it happens, deliberately drops the least important content (oldest turns, summarized overflow) rather than an arbitrary cut. In a tool-use loop, confirm accumulated tool results are capped or summarized, not kept verbatim forever.
 
 ## Inputs
 

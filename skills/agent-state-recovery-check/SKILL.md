@@ -1,13 +1,13 @@
 ---
 name: agent-state-recovery-check
-description: "Check that a long-running agentic workflow can resume after a crash without losing all progress or re-executing already-completed side-effecting steps. Distinct from agent-memory-persistence-check, which is user-facing memory, not in-flight execution state."
+description: "Check that a long-running agentic workflow can resume after a crash without losing all progress or re-executing already-completed side-effecting steps. Distinct from agent-memory-persistence-check, which is user-facing memory, not in-flight execution state. Use when reviewing a multi-step agent workflow."
 ---
 
 # agent-state-recovery-check
 
 ## Instructions
 
-Check that completed steps are checkpointed before the next step starts, not just at the end. Check resume replays from the last checkpoint, not the beginning. Check specifically for non-idempotent steps that a resume path could re-run.
+Identify where the workflow persists execution state, if anywhere (a database, a workflow engine, or the framework's checkpointer). Check that completed steps are checkpointed before the next step starts, not just at the end. Check resume replays from the last checkpoint, not the beginning. Check specifically for non-idempotent steps that a resume path could re-run.
 
 ## Inputs
 

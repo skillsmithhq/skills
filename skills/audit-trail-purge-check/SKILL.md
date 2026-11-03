@@ -7,7 +7,7 @@ description: "Before deleting/purging records across multiple services, check wh
 
 ## Instructions
 
-For each service touched by the purge, check the actual FK relationship on its audit/log table. Where logs are decoupled, decide explicitly: purge separately, anonymize, or leave with a documented reason. Check for any discrete numbering/sequence counter tied to the purged records that could leave unexplained gaps.
+Identify each service's datastore and schema/migration tooling first; where a store has no foreign keys (document stores, separate log pipelines), treat its logs as decoupled unless the deletion code proves otherwise. For each service touched by the purge, check the actual FK relationship on its audit/log table. Where logs are decoupled, decide explicitly: purge separately, anonymize, or leave with a documented reason. Check for any discrete numbering/sequence counter tied to the purged records that could leave unexplained gaps.
 
 ## Inputs
 

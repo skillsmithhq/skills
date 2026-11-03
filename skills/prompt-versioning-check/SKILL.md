@@ -1,6 +1,6 @@
 ---
 name: prompt-versioning-check
-description: "Check that production prompts are tracked as versioned, reviewable artifacts in one place, not duplicated as inline strings across the codebase with no single source of truth."
+description: "Check that production prompts are tracked as versioned, reviewable artifacts in one place, not duplicated as inline strings across the codebase with no single source of truth. Use when reviewing how an LLM feature stores and changes its prompts."
 ---
 
 # prompt-versioning-check

@@ -1,13 +1,13 @@
 ---
 name: soft-delete-consistency-check
-description: "Check that a soft-deleted record is excluded everywhere it needs to be — default manager, raw querysets, aggregations, serializers, and any cache built before the deletion."
+description: "Check that a soft-deleted record is excluded everywhere it needs to be — the ORM's default scope or manager, raw queries, aggregations, serializers, and any cache built before the deletion. Use when reviewing a model with soft delete or a new query or report over soft-deletable data."
 ---
 
 # soft-delete-consistency-check
 
 ## Instructions
 
-Check each access path separately: raw SQL or an "include deleted" scope or manager call, aggregations run against an unfiltered base queryset, related-object traversal that bypasses the soft-delete-aware default scope, and a cache entry never invalidated on delete.
+Identify how the repo implements soft delete (e.g. a `deleted_at` column with a Django manager, Rails `default_scope`, or Hibernate filter). Check each access path separately: raw SQL or an "include deleted" scope or manager call, aggregations run against an unfiltered base queryset, related-object traversal that bypasses the soft-delete-aware default scope, and a cache entry never invalidated on delete.
 
 ## Inputs
 

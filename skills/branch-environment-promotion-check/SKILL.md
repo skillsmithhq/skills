@@ -1,13 +1,13 @@
 ---
 name: branch-environment-promotion-check
-description: "Check that the mapping from branch/tag pattern to deployed environment is unambiguous, so a change can't accidentally deploy to production via an overly broad trigger."
+description: "Check that the mapping from branch/tag pattern to deployed environment is unambiguous, so a change can't accidentally deploy to production via an overly broad trigger. Use when reviewing CI/CD deploy triggers or environment rules."
 ---
 
 # branch-environment-promotion-check
 
 ## Instructions
 
-Check the actual glob/regex pattern each trigger matches, not just its intent. Check for overlapping triggers and confirm which wins. Check that a production trigger requires more than a branch-name pattern alone where risk warrants it (manual approval, specific tag format).
+Identify the CI/CD system first (e.g. GitHub Actions, GitLab CI, Jenkins, Argo CD) and read its trigger rules in its own syntax. Check the actual glob/regex pattern each trigger matches, not just its intent. Check for overlapping triggers and confirm which wins. Check that a production trigger requires more than a branch-name pattern alone where risk warrants it (manual approval, specific tag format).
 
 ## Inputs
 

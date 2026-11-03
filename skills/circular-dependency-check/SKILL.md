@@ -7,7 +7,7 @@ description: "Check for a circular import/module dependency introduced by a chan
 
 ## Instructions
 
-Check the new import against every module that already transitively imports the module being changed. When a cycle is found, extract the shared piece into a third module, or invert one side's dependency — don't just make the import lazy/deferred.
+Use the language's own dependency-graph tooling where it exists (e.g. madge for JS/TS, pydeps or import-linter for Python; Go rejects import cycles at compile time). Check the new import against every module that already transitively imports the module being changed. When a cycle is found, extract the shared piece into a third module, or invert one side's dependency — don't just make the import lazy/deferred.
 
 ## Inputs
 

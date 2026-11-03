@@ -8,7 +8,7 @@ BIDIM is a **prioritisation heuristic**. It orders opportunities for discussion.
 
 | Input | Symbol | 1 | 2 | 3 | 4 | 5 | Evidence required |
 |---|---|---|---|---|---|---|---|
-| Financial impact | I | < 0.5% of ARR per year, or not quantifiable | 0.5–2% | 2–5% | 5–10% | > 10% | A CALC giving the impact basis. If no basis exists, leave I missing; do not guess |
+| Financial impact | I | < 0.5% of ARR per year | 0.5–2% | 2–5% | 5–10% | > 10% | A CALC giving the impact basis. If no basis exists, leave I missing; do not guess |
 | Strategic fit | S | No link to stated objectives | Indirect link | Supports a stated objective | Directly serves a top-3 stated objective | Top-3 objective, and leadership named it as a decision this quarter | Discovery output (decision inventory) |
 | Evidence confidence | C | Insufficient | Low | Medium | High | Very high | Levels from `confidence-scoring.md` |
 | Implementation effort | E | ≤ 1 person-week | ≤ 1 month | ≤ 1 quarter | ≤ 2 quarters | > 2 quarters or a new platform | Stated basis, for example "needs 2 new data sources" |

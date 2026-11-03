@@ -1,13 +1,13 @@
 ---
 name: agent-tool-permission-scope-check
-description: "Check that a new AI-agent/tool integration requests the minimum permission scope it needs, and that destructive/irreversible tool calls require confirmation rather than executing autonomously."
+description: "Check that a new AI-agent/tool integration requests the minimum permission scope it needs, and that destructive/irreversible tool calls require confirmation rather than executing autonomously. Use when reviewing a new tool, OAuth scope, API key, or MCP server given to an agent."
 ---
 
 # agent-tool-permission-scope-check
 
 ## Instructions
 
-Check the requested scope against the tool's stated purpose — flag read-only tools requesting write/admin scope. Check that destructive actions require an explicit, specific confirmation, not a generic "proceed?". Check that error responses don't leak more than a successful call would.
+Find where the integration's permissions are declared (OAuth scopes, API key roles, IAM policy, MCP server config) and read the actual grant. Check the requested scope against the tool's stated purpose — flag read-only tools requesting write/admin scope. Check that destructive actions require an explicit, specific confirmation, not a generic "proceed?". Check that error responses don't leak more than a successful call would.
 
 ## Inputs
 

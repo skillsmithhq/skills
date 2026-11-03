@@ -1,6 +1,6 @@
 ---
 name: multi-agent-handoff-check
-description: "Check that when one agent delegates to another, the handoff carries enough context to act correctly, and that task ownership doesn't become ambiguous."
+description: "Check that when one agent delegates to another, the handoff carries enough context to act correctly, and that task ownership doesn't become ambiguous. Use when reviewing code where one agent delegates work to another."
 ---
 
 # multi-agent-handoff-check

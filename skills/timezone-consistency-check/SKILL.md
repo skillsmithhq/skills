@@ -1,6 +1,6 @@
 ---
 name: timezone-consistency-check
-description: "Check datetime handling for naive-vs-aware mismatches and tenant-local-vs-UTC display bugs, especially relevant for a platform with tenants across multiple timezones."
+description: "Check datetime handling for naive-vs-aware mismatches and tenant-local-vs-UTC display bugs, especially relevant for a platform with tenants across multiple timezones. Use when reviewing code that stores, compares, filters, or displays dates and times."
 ---
 
 # timezone-consistency-check

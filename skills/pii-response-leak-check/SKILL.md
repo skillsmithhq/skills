@@ -1,13 +1,13 @@
 ---
 name: pii-response-leak-check
-description: "Check that error responses returned to API clients don't leak PII, internal stack traces, or DB error text — distinct from logging PII checks, since this is about what the client receives."
+description: "Check that error responses returned to API clients don't leak PII, internal stack traces, or DB error text — distinct from logging PII checks, since this is about what the client receives. Use when reviewing error handling in an API."
 ---
 
 # pii-response-leak-check
 
 ## Instructions
 
-Find every place a caught exception's `str(e)`/`.args` reaches the response body directly. Replace with a generic message plus a correlation id; keep the real detail server-side in the log only.
+Identify the repo's framework and its error-handling layer (global exception handlers, error middleware, default debug error pages). Find every place a caught exception's message or details (e.g. `str(e)` in Python, `err.message` in JavaScript, `e.getMessage()` in Java) reaches the response body directly, and confirm debug/stack-trace error pages are off outside development. Replace with a generic message plus a correlation id; keep the real detail server-side in the log only.
 
 ## Inputs
 

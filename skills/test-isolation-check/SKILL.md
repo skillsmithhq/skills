@@ -1,6 +1,6 @@
 ---
 name: test-isolation-check
-description: "Check that tests don't leak state between runs — shared DB rows, module-level caches, or global singletons not reset — causing order-dependent pass/fail."
+description: "Check that tests don't leak state between runs — shared DB rows, module-level caches, or global singletons not reset — causing order-dependent pass/fail. Use when a test passes alone but fails in the full suite, or before enabling parallel test runs."
 ---
 
 # test-isolation-check

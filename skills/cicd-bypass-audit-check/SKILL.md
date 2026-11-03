@@ -7,7 +7,7 @@ description: "Check whether a merge/deploy can bypass a required CI check (admin
 
 ## Instructions
 
-Identify the actual override path and who can use it. Check that using it leaves an audit trail. Check whether the override is scoped to genuine emergencies or is broad enough to get used routinely, which means the check isn't actually required in practice.
+Identify the repo's CI/CD platform and branch-protection or deploy-gate settings (e.g. protected branches, required status checks, environment approvals) first. Identify the actual override path and who can use it. Check that using it leaves an audit trail. Check whether the override is scoped to genuine emergencies or is broad enough to get used routinely, which means the check isn't actually required in practice.
 
 ## Inputs
 

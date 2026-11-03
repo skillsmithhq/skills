@@ -1,13 +1,13 @@
 ---
 name: agent-observability-check
-description: "Check that an agentic pipeline logs each decision point — tool calls, reasoning/plan, results — in enough detail to reconstruct after the fact why the agent took a given action."
+description: "Check that an agentic pipeline logs each decision point — tool calls, reasoning/plan, results — in enough detail to reconstruct after the fact why the agent took a given action. Use when reviewing logging or tracing in an agent pipeline."
 ---
 
 # agent-observability-check
 
 ## Instructions
 
-Check each step records its input context, chosen tool and arguments, and raw result — not just a final summary. Check this is captured on failure paths too, not only the happy path. Check logged traces don't leak sensitive data into a less-protected trace store.
+Identify the repo's logging/tracing stack first (e.g. a structured logger, OpenTelemetry, or an LLM tracing tool) and check within it. Check each step records its input context, chosen tool and arguments, and raw result — not just a final summary. Check this is captured on failure paths too, not only the happy path. Check logged traces don't leak sensitive data into a less-protected trace store.
 
 ## Inputs
 

@@ -1,6 +1,6 @@
 ---
 name: bounded-context-check
-description: "Check whether a shared-sounding concept (Customer, Request, Account) actually means the same thing across the services that use it, or has quietly diverged with no explicit translation between them."
+description: "Check whether a shared-sounding concept (Customer, Request, Account) actually means the same thing across the services that use it, or has quietly diverged with no explicit translation between them. Use when reviewing a cross-service integration or a model shared between services."
 ---
 
 # bounded-context-check

@@ -20,7 +20,7 @@ A go/no-go with findings for batching, idempotency, dry run, rollback data, load
 ## Constraints
 
 - A backfill that sends one email per row is an incident, not a fix.
-- Test against a production-sized copy if one exists; row counts change the risk.
+- Recommend a test run against a production-sized non-production copy if one exists; row counts change the risk.
 - Review only: never run the script against a real database.
 
 ## Examples

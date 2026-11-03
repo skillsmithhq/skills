@@ -133,7 +133,7 @@ Source: https://emudhra.we-have-a-problem.com/ (data files: `impacted-intermedia
   ```
 - **Fedora, RHEL, CentOS Stream, Rocky, Alma and Amazon Linux 2023:** extract both roots into `/etc/pki/ca-trust/source/blocklist` (`blacklist` on older releases), then run `update-ca-trust`:
   ```sh
-  trust extract --overwrite --format=pem-bundle --filter='pkcs11:object=Comodo%20AAA%20Services%20root;type=cert' "$d/Comodo_AAA_Services_root.pem"
+  trust extract --overwrite --format=pem-bundle --filter='pkcs11:object=Comodo%20AAA%20Services%20root;type=cert' /etc/pki/ca-trust/source/blocklist/Comodo_AAA_Services_root.pem
   ```
   Repeat with `emSign%20ECC%20Root%20CA%20-%20G3`.
 - **openSUSE/SLES:** the same with `/etc/pki/trust/blocklist`, then `update-ca-certificates`.

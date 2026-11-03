@@ -96,7 +96,7 @@ Handoff payload: `decisions[]`, `systems[]`, `data_requirements[]`, `open_questi
 
 - **Notes are too thin** (no decisions or systems identifiable): output the open-question list and a suggested agenda for a second call.
 - **Credentials or secrets in the notes:** do not reproduce them; escalate and advise rotation.
-- **Special-category personal data** (health, finance of individuals): exclude it and escalate.
+- **Special-category or other sensitive personal data** (for example health data, or individuals' financial details): exclude it and escalate.
 - **The client asks for something outside scope** (legal advice, building production software): record it, mark it out of scope, and flag it for the human owner.
 
 ## Examples

@@ -1,13 +1,13 @@
 ---
 name: agent-eval-regression-check
-description: "Check that a prompt or agent behavior change runs against a standing eval set before shipping, since a fix for one case can silently regress a different case that was working before."
+description: "Check that a prompt or agent behavior change runs against a standing eval set before shipping, since a fix for one case can silently regress a different case that was working before. Use when reviewing a change to a prompt, model, or agent logic."
 ---
 
 # agent-eval-regression-check
 
 ## Instructions
 
-Check whether an eval set exists for the prompt/agent being changed. If not, flag it and suggest starting one from known-important cases, including the case that motivated this change. If one exists, confirm the change was actually run against it.
+Look for the repo's existing eval tooling first (an evals directory, an eval framework, or golden-output tests) and check whether an eval set exists for the prompt/agent being changed. If not, flag it and suggest starting one from known-important cases, including the case that motivated this change. If one exists, confirm the change was actually run against it.
 
 ## Inputs
 

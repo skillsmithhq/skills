@@ -1,13 +1,13 @@
 ---
 name: cache-key-scoping-check
-description: "Check that a cache key includes every dimension the cached value actually varies by (tenant, user, locale, permission level) — a key missing one dimension serves one caller's data to another."
+description: "Check that a cache key includes every dimension the cached value actually varies by (tenant, user, locale, permission level) — a key missing one dimension serves one caller's data to another. Use when reviewing code that reads or writes a cache."
 ---
 
 # cache-key-scoping-check
 
 ## Instructions
 
-For each dimension the cached value depends on, confirm it's present in the key. Also check invalidation: a correctly scoped key that's never invalidated on write becomes a scoped-but-stale leak of the previous state.
+Find how the repo builds cache keys first (cache library, memoisation decorator, or HTTP/CDN cache rules such as `Vary`). For each dimension the cached value depends on, confirm it's present in the key. Also check invalidation: a correctly scoped key that's never invalidated on write becomes a scoped-but-stale leak of the previous state.
 
 ## Inputs
 

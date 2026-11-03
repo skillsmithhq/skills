@@ -24,7 +24,7 @@ A document answering, in order:
 2. Feasibility with the current architecture (or what new pattern it needs).
 3. What it touches (services, models, endpoints, migrations).
 4. Data/schema impact.
-5. Multi-tenancy impact.
+5. Multi-tenancy impact (if the product isn't multi-tenant, say so and why it's not applicable).
 6. Security impact.
 7. Performance impact (name the profiling point that would confirm it).
 8. Effort estimate (S/M/L) and what drives it.

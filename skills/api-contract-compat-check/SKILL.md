@@ -1,13 +1,13 @@
 ---
 name: api-contract-compat-check
-description: "Check whether a change to an API response shape or inter-service payload is additive (safe) or breaking (needs versioning/coordination) for every consumer of that contract."
+description: "Check whether a change to an API response shape or inter-service payload is additive (safe) or breaking (needs versioning/coordination) for every consumer of that contract. Use when reviewing a change to an API schema, serializer, or event payload."
 ---
 
 # api-contract-compat-check
 
 ## Instructions
 
-Identify every actual consumer of the changed contract, including ones in other repos. Classify the change as additive or breaking. For a breaking change, pick one explicit path: add-alongside-and-deprecate, version the endpoint, or coordinate a simultaneous deploy.
+Identify how the contract is defined in this repo (e.g. OpenAPI, GraphQL or protobuf schemas, serializers, event schemas) and run its breaking-change checker if it has one. Identify every actual consumer of the changed contract, including ones in other repos. Classify the change as additive or breaking. For a breaking change, pick one explicit path: add-alongside-and-deprecate, version the endpoint, or coordinate a simultaneous deploy.
 
 ## Inputs
 

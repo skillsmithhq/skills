@@ -1,6 +1,6 @@
 ---
 name: single-point-of-failure-check
-description: "Check a new architecture/design for a component with no redundancy that everything depends on, and confirm whether that's a deliberate, accepted tradeoff or an oversight."
+description: "Check a new architecture/design for a component with no redundancy that everything depends on, and confirm whether that's a deliberate, accepted tradeoff or an oversight. Use when reviewing a design doc, architecture proposal, or new infrastructure dependency."
 ---
 
 # single-point-of-failure-check

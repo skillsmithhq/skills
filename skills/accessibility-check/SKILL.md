@@ -7,7 +7,7 @@ description: "Check UI changes for common accessibility failures: missing labels
 
 ## Instructions
 
-Check that every interactive element is reachable and operable by keyboard with a visible focus indicator, form fields have associated labels, images have meaningful alt text (or empty alt if decorative), headings form a logical order, colour isn't the only signal, text contrast meets WCAG AA, and dynamic changes (errors, toasts, loading) are announced. For modals, check focus moves in, is trapped, and returns on close. Run the repo's existing a11y linter or test tooling if present.
+Identify the UI framework and platform first (web, iOS, Android, cross-platform) and work in its terms: on native mobile, labels, alt text and headings map to accessibility labels, roles/traits and the platform screen reader. Check that every interactive element is reachable and operable by keyboard with a visible focus indicator, form fields have associated labels, images have meaningful alt text (or empty alt if decorative), headings form a logical order, colour isn't the only signal, text contrast meets WCAG AA, and dynamic changes (errors, toasts, loading) are announced. For modals, check focus moves in, is trapped, and returns on close. Run the repo's existing a11y linter or test tooling if present.
 
 ## Inputs
 
@@ -19,7 +19,7 @@ A `file:line` finding per failure, each mapped to the WCAG criterion it violates
 
 ## Constraints
 
-- A `div` with an `onClick` is not a button to a keyboard or screen-reader user.
+- On the web, a `div` with an `onClick` is not a button to a keyboard or screen-reader user.
 - Automated tools catch only part of the problems; check keyboard flow by reading the code too.
 
 ## Examples

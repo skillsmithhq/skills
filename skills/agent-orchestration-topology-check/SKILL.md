@@ -1,13 +1,13 @@
 ---
 name: agent-orchestration-topology-check
-description: "Check that a multi-agent system's control-flow shape (fixed pipeline, hierarchical supervisor, peer negotiation) actually matches how structured or open-ended the underlying task is."
+description: "Check that a multi-agent system's control-flow shape (fixed pipeline, hierarchical supervisor, peer negotiation) actually matches how structured or open-ended the underlying task is. Use when reviewing a multi-agent design or orchestration code."
 ---
 
 # agent-orchestration-topology-check
 
 ## Instructions
 
-Determine whether the task is fixed-sequence, needs dynamic replanning, or has bounded task-type variation, and check the implementation's topology matches. Check that a supervisor's routing is deterministic code when the routing rule itself is simple and static, not a model call on every request.
+Read the orchestration code or design, in whatever framework it uses, to see how control actually passes between agents. Determine whether the task is fixed-sequence, needs dynamic replanning, or has bounded task-type variation, and check the implementation's topology matches. Check that a supervisor's routing is deterministic code when the routing rule itself is simple and static, not a model call on every request.
 
 ## Inputs
 

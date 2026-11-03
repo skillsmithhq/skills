@@ -7,7 +7,7 @@ description: "Check for SQL, shell, template, and query-language injection where
 
 ## Instructions
 
-Find every place request data reaches an interpreter: raw SQL, ORM raw/extra calls, shell or subprocess calls, template rendering of user strings, LDAP/NoSQL/search query builders, and dynamic sort/filter fields. Confirm each uses parameterization or an allowlist. For dynamic column or sort names, require an allowlist, since placeholders can't parameterize identifiers.
+Identify the repo's data-access, templating, and process-execution libraries first, and judge each call by that library's own safe API. Find every place request data reaches an interpreter: raw SQL, ORM raw-query escape hatches, shell or subprocess calls, template rendering of user strings, LDAP/NoSQL/search query builders, and dynamic sort/filter fields. Confirm each uses parameterization or an allowlist. For dynamic column or sort names, require an allowlist, since placeholders can't parameterize identifiers.
 
 ## Inputs
 

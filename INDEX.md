@@ -1,6 +1,6 @@
 # Skills index
 
-104 skills in 12 categories. Each links to its `SKILL.md`. **For** lists who the skill is most useful to (Developer, Tester, Reviewer, Tech Lead, Manager) and which part of the stack it applies to (Backend, Frontend, DevOps, or Any stack).
+112 skills in 12 categories. Each links to its `SKILL.md`. **For** lists who the skill is most useful to (Developer, Tester, Reviewer, Tech Lead, Manager) and which part of the stack it applies to (Backend, Frontend, DevOps, or Any stack).
 
 The 17 Business Intelligence skills are listed separately in the README's Business Intelligence section.
 
@@ -57,22 +57,23 @@ The 17 Business Intelligence skills are listed separately in the README's Busine
 | [`timeout-budget-check`](skills/timeout-budget-check/SKILL.md) | Check that every outbound call (HTTP, database, cache, queue, third-party SDK) has an explicit timeout, and that nested timeouts fit inside the caller's own deadline. | Developer, Reviewer · Backend |
 | [`payload-size-check`](skills/payload-size-check/SKILL.md) | Check API responses, list endpoints, exports, and messages for unbounded size: missing pagination, over-fetching, large embedded blobs, and no request-body limits. | Developer, Reviewer · Backend, Frontend |
 
-## Data & databases (12)
+## Data & databases (13)
 
 | Skill | What it does | For |
 |---|---|---|
 | [`migration-safety-check`](skills/migration-safety-check/SKILL.md) | Check whether code still running mid-rollout keeps working against a new migration, whether it locks a large table, and, for multi-schema or multi-tenant databases, whether it runs correctly in every schema, not just one. | Developer, Reviewer, Tech Lead · Backend, DevOps |
 | [`data-backfill-safety-check`](skills/data-backfill-safety-check/SKILL.md) | Check a one-off data backfill or correction script for batching, idempotency, dry-run support, and rollback before it runs against production. | Developer, Reviewer, Tech Lead · Backend, DevOps |
 | [`index-coverage-check`](skills/index-coverage-check/SKILL.md) | Check that new or changed queries are backed by suitable database indexes and that new indexes are worth their write cost. | Developer, Reviewer · Backend |
-| [`query-audit`](skills/query-audit/SKILL.md) | Find related-object access inside a loop or serializer method, check it against actual select_related/prefetch_related coverage, and measure the real query count before/after. | Developer, Reviewer · Backend |
+| [`query-audit`](skills/query-audit/SKILL.md) | Find N+1 queries (related-object access inside a loop or serializer) and check them against the ORM's actual eager-loading coverage (e.g. select_related/prefetch_related, includes, joinedload), measuring the real query count before/after. | Developer, Reviewer · Backend |
 | [`transaction-boundary-check`](skills/transaction-boundary-check/SKILL.md) | Check that multi-step writes that must succeed or fail together run in one transaction, and that side effects (emails, events, API calls) fire only after commit. | Developer, Reviewer · Backend |
 | [`check-then-act-race-check`](skills/check-then-act-race-check/SKILL.md) | Find read-then-write logic that checks a condition (a limit, a balance, a uniqueness rule) and writes without a DB-level lock or constraint, making it vulnerable to a race under concurrent requests. | Developer, Tester, Reviewer · Backend |
-| [`soft-delete-consistency-check`](skills/soft-delete-consistency-check/SKILL.md) | Check that a soft-deleted record is excluded everywhere it needs to be — default manager, raw querysets, aggregations, serializers, and any cache built before the deletion. | Developer, Reviewer · Backend |
+| [`soft-delete-consistency-check`](skills/soft-delete-consistency-check/SKILL.md) | Check that a soft-deleted record is excluded everywhere it needs to be — the ORM's default scope or manager, raw queries, aggregations, serializers, and any cache built before the deletion. | Developer, Reviewer · Backend |
 | [`cache-key-scoping-check`](skills/cache-key-scoping-check/SKILL.md) | Check that a cache key includes every dimension the cached value actually varies by (tenant, user, locale, permission level) — a key missing one dimension serves one caller's data to another. | Developer, Reviewer · Backend |
 | [`timezone-consistency-check`](skills/timezone-consistency-check/SKILL.md) | Check datetime handling for naive-vs-aware mismatches and tenant-local-vs-UTC display bugs, especially relevant for a platform with tenants across multiple timezones. | Developer, Tester, Reviewer · Backend, Frontend |
 | [`currency-round-trip-check`](skills/currency-round-trip-check/SKILL.md) | Check money-conversion code for round-trip rounding error: recomputing an amount by dividing an already-rounded intermediate value back through a conversion rate amplifies the rounding error instead of reproducing the original. | Developer, Tester, Reviewer · Backend, Frontend |
 | [`audit-trail-purge-check`](skills/audit-trail-purge-check/SKILL.md) | Before deleting/purging records across multiple services, check whether each service's audit/log records are FK-cascaded (deleted with the parent) or decoupled (survive and need separate handling). | Developer, Reviewer, Tech Lead · Backend |
 | [`data-retention-check`](skills/data-retention-check/SKILL.md) | Check that personal and sensitive data has a defined retention period and that deletion actually reaches every copy (backups excepted by policy, caches, search indexes, logs, analytics, third parties). | Developer, Tech Lead, Manager · Backend |
+| [`receipt-ocr`](skills/receipt-ocr/SKILL.md) | Extract merchant, date, currency, subtotal, tax, tip, discount, total, line items, tax IDs and payment method from receipt images or PDFs in any language, using only free, local open-source OCR engines and deterministic rules: no LLM, no paid API, no data leaves the machine. Several engines and image variants vote on each field, and a field is auto-accepted only when every run agrees and the arithmetic checks out; everything else goes to review. | Developer, Tester, Manager · Any stack |
 
 ## Architecture (8)
 
@@ -101,7 +102,7 @@ The 17 Business Intelligence skills are listed separately in the README's Busine
 | [`pipeline-flakiness-check`](skills/pipeline-flakiness-check/SKILL.md) | Check whether a CI pipeline failure is a real regression or environment/infra flakiness, and that a flaky step isn't silently retried/ignored in a way that masks genuine failures. | Developer, Tester, Tech Lead · DevOps |
 | [`release`](skills/release/SKILL.md) | Create a release branch: ask which branch to cut it from, what to name it, and which commits to bring in, then cherry-pick them and resolve any merge conflicts. | Developer, Tech Lead · Any stack |
 
-## Operations & reliability (6)
+## Operations & reliability (8)
 
 | Skill | What it does | For |
 |---|---|---|
@@ -111,6 +112,8 @@ The 17 Business Intelligence skills are listed separately in the README's Busine
 | [`runbook-doc`](skills/runbook-doc/SKILL.md) | Write an operational runbook for an alert, service, or routine task: how to recognise the problem, check it, mitigate it, and escalate. | Developer, Tech Lead · DevOps |
 | [`health-check-endpoint-check`](skills/health-check-endpoint-check/SKILL.md) | Check that liveness and readiness endpoints report what the orchestrator needs and don't cause outages themselves. | Developer, Tech Lead · Backend, DevOps |
 | [`graceful-shutdown-check`](skills/graceful-shutdown-check/SKILL.md) | Check that a service finishes in-flight work and releases resources cleanly when it receives a termination signal during deploys and scaling. | Developer, Tech Lead · Backend, DevOps |
+| [`backend-latency-check`](skills/backend-latency-check/SKILL.md) | Find where time goes in a slow endpoint, job or service path by measuring it (p50, p95, p99) and breaking the time down into database, external calls, serialisation, CPU and waiting, then fix the biggest contributor and measure again. | Developer, Tech Lead · Backend |
+| [`memory-leak-check`](skills/memory-leak-check/SKILL.md) | Check whether a service, worker or browser app's memory grows without bound, find what is holding the memory using the runtime's own heap tools, and confirm the fix with a before-and-after soak. | Developer, Tech Lead · Backend, Frontend |
 
 ## Cloud cost & planning (4)
 
@@ -121,7 +124,7 @@ The 17 Business Intelligence skills are listed separately in the README's Busine
 | [`effort-estimation`](skills/effort-estimation/SKILL.md) | Estimate the effort for a feature, ticket, or project as a range with explicit assumptions and risks, grounded in the actual codebase rather than the description alone. | Developer, Tech Lead, Manager · Any stack |
 | [`cr-feasibility`](skills/cr-feasibility/SKILL.md) | Answer a fixed set of feasibility questions for a Change Request, and save the result under the Change Request folder. | Tech Lead, Manager · Any stack |
 
-## Testing (6)
+## Testing (10)
 
 | Skill | What it does | For |
 |---|---|---|
@@ -131,8 +134,12 @@ The 17 Business Intelligence skills are listed separately in the README's Busine
 | [`test-data-realism-check`](skills/test-data-realism-check/SKILL.md) | Check that test fixtures reflect realistic edge cases (nulls, boundary values, multi-tenant data) rather than only a clean happy-path shape. | Developer, Tester, Reviewer · Backend, Frontend |
 | [`test-flakiness-root-cause-check`](skills/test-flakiness-root-cause-check/SKILL.md) | Find the actual cause of a flaky test (timing/order dependence, shared mutable state, unmocked clock/network) instead of retrying or skipping it. | Developer, Tester · Backend, Frontend, DevOps |
 | [`test-isolation-check`](skills/test-isolation-check/SKILL.md) | Check that tests don't leak state between runs — shared DB rows, module-level caches, or global singletons not reset — causing order-dependent pass/fail. | Developer, Tester, Reviewer · Backend, Frontend |
+| [`load-test-plan`](skills/load-test-plan/SKILL.md) | Plan and run a safe load test: targets taken from the SLO or expected traffic, an approved non-production environment, a realistic traffic model, ramp and stop rules, and a report of throughput, latency percentiles, errors and the first bottleneck found. Uses the load-testing tool already in the repo. | Developer, Tester, Tech Lead · Backend, DevOps |
+| [`bdd-feature-writing`](skills/bdd-feature-writing/SKILL.md) | Turn a requirement, user story or ticket into BDD feature files in Gherkin: declarative Given/When/Then scenarios, one behaviour each, with Scenario Outlines for data variations, a short Background, and tags, following the repo's existing BDD framework and conventions. | Tester, Developer, Manager · Any stack |
+| [`bdd-step-definitions`](skills/bdd-step-definitions/SKILL.md) | Write or fix the step definitions behind BDD feature files: reuse existing steps, match parameters with the framework's expressions or parameter types, keep steps thin by delegating to page objects, API clients or domain helpers, share state through the framework's context mechanism, and run the scenarios to prove they pass. | Developer, Tester · Any stack |
+| [`bdd-scenario-review`](skills/bdd-scenario-review/SKILL.md) | Review existing BDD feature files and their step definitions for common problems: imperative UI-script steps, several behaviours in one scenario, incidental detail, order-dependent scenarios, duplicate or near-duplicate steps, logic in steps, missing negative and boundary cases, and tag drift. | Tester, Reviewer, Tech Lead · Any stack |
 
-## Frontend & UX (7)
+## Frontend & UX (8)
 
 | Skill | What it does | For |
 |---|---|---|
@@ -143,6 +150,7 @@ The 17 Business Intelligence skills are listed separately in the README's Busine
 | [`error-state-actionability-check`](skills/error-state-actionability-check/SKILL.md) | Check that a UI error message tells the user what to do next, not just what failed — distinct from checking whether the message leaks sensitive data. | Developer, Tester, Reviewer · Frontend |
 | [`form-validation-timing-check`](skills/form-validation-timing-check/SKILL.md) | Check when a form field's validation actually fires — on every keystroke, on blur, or only on submit — since the wrong timing makes a technically-correct validator feel punishing or feel broken. | Developer, Tester, Reviewer · Frontend |
 | [`loading-state-consistency-check`](skills/loading-state-consistency-check/SKILL.md) | Check for a race between a loading flag and stale data — a component that clears "loading" before new data has actually replaced the old, showing outdated content as if it were current. | Developer, Tester, Reviewer · Frontend |
+| [`web-performance-check`](skills/web-performance-check/SKILL.md) | Check a web page or front-end change for performance problems that users feel: Core Web Vitals (LCP, INP, CLS), JavaScript bundle size, images, fonts, render-blocking resources and caching, measured before and after rather than guessed. | Developer, Tester, Reviewer · Frontend |
 
 ## Docs & writing (10)
 
@@ -155,7 +163,7 @@ The 17 Business Intelligence skills are listed separately in the README's Busine
 | [`implementation-doc`](skills/implementation-doc/SKILL.md) | Draft an implementation document for an already-approved Change Request, and save it under the Implementation folder (not RCA, not Proposal). | Developer, Tech Lead · Any stack |
 | [`rca-doc`](skills/rca-doc/SKILL.md) | Write a Root Cause Analysis document for a bug/incident that has already been diagnosed in this session, and save it under the RCA folder. | Developer, Tech Lead, Manager · Any stack |
 | [`incident-postmortem`](skills/incident-postmortem/SKILL.md) | Write a structured incident postmortem for a customer-impacting production incident, distinct from a code-level RCA — covers detection, communication, and follow-up actions, not just root cause. | Tech Lead, Manager · DevOps |
-| [`user-guide-doc`](skills/user-guide-doc/SKILL.md) | Draft an end-user-facing guide (not a technical doc) for a feature, and save it under the User Guide folder. | Developer, Tester, Manager · Frontend |
+| [`user-guide-doc`](skills/user-guide-doc/SKILL.md) | Draft an end-user-facing guide (not a technical doc) for a feature, and save it in the repo's user-docs folder. | Developer, Tester, Manager · Frontend |
 | [`onboarding-doc`](skills/onboarding-doc/SKILL.md) | Write a getting-started guide that takes a new contributor from clone to running, testing, and shipping a first change, verified against the repo's actual tooling. | Developer, Tech Lead · Any stack |
 | [`repo-map`](skills/repo-map/SKILL.md) | Give agents a map of the codebase by writing an AGENTS.md into each significant directory: what that directory is responsible for, and an index of its files with a one-line brief each. | Developer, Tech Lead · Any stack |
 

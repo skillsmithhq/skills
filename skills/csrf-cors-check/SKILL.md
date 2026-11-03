@@ -7,7 +7,7 @@ description: "Check CORS and CSRF configuration for overly permissive settings �
 
 ## Instructions
 
-Check for a wildcard/overly broad CORS origin allowlist, especially combined with credentials. Check for CSRF protection disabled on any state-changing endpoint. Confirm server-to-server-only endpoints aren't reachable from a browser context at all.
+Identify the framework's CORS and CSRF mechanism first. Check for a wildcard/overly broad CORS origin allowlist, especially combined with credentials — browsers reject a literal `*` with credentials, so the real risk is usually config that reflects the request's `Origin` header back while allowing credentials. Check for CSRF protection disabled on any state-changing endpoint. Confirm server-to-server-only endpoints aren't reachable from a browser context at all.
 
 ## Inputs
 
@@ -25,6 +25,6 @@ A finding per misconfiguration, naming the specific setting.
 
 ### Example 1
 
-Input: a `csrf_exempt` decorator left on an endpoint after a one-off integration fix.
+Input: a CSRF exemption (e.g. Django's `csrf_exempt` decorator) left on an endpoint after a one-off integration fix.
 
 Output: Flagged — the endpoint now accepts state-changing requests with no CSRF protection; check if the original integration issue has a proper token-based fix available.

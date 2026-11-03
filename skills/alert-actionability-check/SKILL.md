@@ -7,7 +7,7 @@ description: "Check that a new or changed alert fires on user-visible symptoms, 
 
 ## Instructions
 
-For each alert, state what user-facing problem it represents. Prefer symptom alerts (error rate, latency, failed jobs) over cause alerts (CPU, memory) unless the cause reliably precedes an outage. Check the threshold and duration against recent data to estimate how often it would have fired. Confirm it names an owner, links a runbook, and that its severity matches whether someone must act right now.
+Identify the monitoring tool and its alert-rule format first (e.g. Prometheus rules, Datadog monitors, CloudWatch alarms). For each alert, state what user-facing problem it represents. Prefer symptom alerts (error rate, latency, failed jobs) over cause alerts (CPU, memory) unless the cause reliably precedes an outage. Check the threshold and duration against recent data to estimate how often it would have fired. Confirm it names an owner, links a runbook, and that its severity matches whether someone must act right now.
 
 ## Inputs
 

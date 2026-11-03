@@ -1,6 +1,6 @@
 ---
 name: user-guide-doc
-description: "Draft an end-user-facing guide (not a technical doc) for a feature, and save it under the User Guide folder. Use when asked to \"write a user guide for X\", \"document this for end users\", or to explain a feature to non-technical tenant admins/users."
+description: "Draft an end-user-facing guide (not a technical doc) for a feature, and save it in the repo's user-docs folder. Use when asked to \"write a user guide for X\", \"document this for end users\", or to explain a feature to non-technical tenant admins/users."
 ---
 
 # user-guide-doc

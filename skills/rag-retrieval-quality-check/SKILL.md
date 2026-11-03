@@ -1,6 +1,6 @@
 ---
 name: rag-retrieval-quality-check
-description: "Check that a RAG pipeline can measure whether retrieved chunks are actually relevant, and that chunking doesn't split content in a way that breaks its meaning."
+description: "Check that a RAG pipeline can measure whether retrieved chunks are actually relevant, and that chunking doesn't split content in a way that breaks its meaning. Use when reviewing a retrieval-augmented generation pipeline."
 ---
 
 # rag-retrieval-quality-check

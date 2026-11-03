@@ -27,4 +27,4 @@ A statement of whether a restart is sufficient or a rebuild is required, with th
 
 Input: "I changed environments/.env but the app still uses the old value after restart."
 
-Output: The `.env` file is baked into the Docker image at build time; a restart re-reads the old snapshot. Run `docker compose build app` (or the equivalent build step) before restarting.
+Output: The Dockerfile copies `.env` into the image at build time; a restart re-reads the old snapshot. Run `docker compose build app` (or the equivalent build step) before restarting.

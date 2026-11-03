@@ -49,7 +49,7 @@ Do not use to score data quality (that is `data-readiness-assessment`) or to joi
 6. **Note candidate relationships** (not joins): columns that look like keys shared across datasets. Mark each `HYP` and hand them to `cross-module-data-mapping` for validation. Note ID columns with duplicates. For example, a duplicate `crm_account_id` in a customers table suggests duplicate customer records.
 7. **Record ownership and access:** for each system, the business owner (role), the technical owner, the access route (export, API, read-only replica) and the approval needed.
 8. **Personal data review.** For each `possible_personal_data` flag, decide with the owner whether the field is needed. Default: not needed. Recommend dropping or pseudonymising it before analysis.
-9. **Compare against the data request.** List what was requested but not received, and what was received but not requested (the latter may need deleting under minimisation).
+9. **Compare against the data request.** List what was requested but not received, and what was received but not requested (the latter may need deleting under minimisation: flag it to the data owner, who decides; do not delete client files yourself).
 10. **List intelligence opportunities as questions.** For example: "Billing and product events both carry a customer identifier, so usage could be compared with revenue (if the join validates)" [HYP]. Do not claim the analysis is possible until readiness and mapping are done.
 
 ## Decision rules

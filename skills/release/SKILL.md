@@ -25,10 +25,11 @@ Use `AskUserQuestion` (one call, up to three questions) unless the user already 
 ### 3. Create the branch and apply the commits
 
 ```
-git switch -c <branch-name> <base>
+git switch --no-track -c <branch-name> <base>
 git cherry-pick -x <sha1> <sha2> ...        # oldest first
 ```
 
+- `--no-track` stops the new branch tracking the base, so a later pull or push doesn't go to the base by mistake.
 - Use `-x` so each commit records where it came from.
 - For a merge commit the user explicitly wants, use `-m 1`.
 - Skip commits already on the base (`git cherry <base> <source>` marks them with `-`) and say which were skipped.

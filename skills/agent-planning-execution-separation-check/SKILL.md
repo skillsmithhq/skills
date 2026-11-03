@@ -1,13 +1,13 @@
 ---
 name: agent-planning-execution-separation-check
-description: "Check whether a complex agentic task separates planning (decide the steps) from execution (carry them out), making the plan inspectable before real-world actions start."
+description: "Check whether a complex agentic task separates planning (decide the steps) from execution (carry them out), making the plan inspectable before real-world actions start. Use when reviewing an agent that takes consequential real-world actions."
 ---
 
 # agent-planning-execution-separation-check
 
 ## Instructions
 
-Check whether the design can produce an explicit plan as a distinct artifact before execution, at least for consequential actions. Where a plan exists, check it's actually surfaced for review, not generated and immediately executed with no gap.
+Read the agent's control flow in whatever framework it uses. Check whether the design can produce an explicit plan as a distinct artifact before execution, at least for consequential actions. Where a plan exists, check it's actually surfaced for review, not generated and immediately executed with no gap.
 
 ## Inputs
 

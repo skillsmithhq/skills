@@ -1,13 +1,13 @@
 ---
 name: agent-memory-persistence-check
-description: "Check that an agent's persisted memory/state is scoped per user/tenant and doesn't grow unbounded, and that corrected facts don't sit alongside stale ones with no way to tell which is current."
+description: "Check that an agent's persisted memory/state is scoped per user/tenant and doesn't grow unbounded, and that corrected facts don't sit alongside stale ones with no way to tell which is current. Use when reviewing how an agent stores long-lived memory."
 ---
 
 # agent-memory-persistence-check
 
 ## Instructions
 
-Check the memory store is scoped per caller, the same class of check as `cache-key-scoping-check` but for long-lived agent memory. Check for eviction/summarization of old entries. Check that a corrected fact replaces or supersedes the old one rather than both persisting.
+Identify the memory store first (a database table, vector store, file, or framework memory class) and how its keys are built. Check the memory store is scoped per caller, the same class of check as `cache-key-scoping-check` but for long-lived agent memory. Check for eviction/summarization of old entries. Check that a corrected fact replaces or supersedes the old one rather than both persisting.
 
 ## Inputs
 

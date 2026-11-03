@@ -1,6 +1,6 @@
 ---
 name: secret-rotation-check
-description: "After a secret is rotated, check it was actually replaced everywhere it's used — not just the primary secret store — since a partial rotation leaves a working old credential."
+description: "After a secret is rotated, check it was actually replaced everywhere it's used — not just the primary secret store — since a partial rotation leaves a working old credential. Use after rotating a key, password, or token, or when reviewing a rotation runbook."
 ---
 
 # secret-rotation-check
@@ -20,6 +20,7 @@ A checklist of consumers confirmed updated, and confirmation the old secret is r
 ## Constraints
 
 - Adding a new key without disabling the old one leaves the old one still usable.
+- Don't revoke the old secret or restart services yourself; report what still uses it and let the owner do it, since revoking early breaks any consumer not yet updated.
 - Never print a secret's full value in findings or chat: report its location, type, and a masked form showing at most the first and last four characters.
 
 ## Examples

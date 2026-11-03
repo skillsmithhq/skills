@@ -1,6 +1,6 @@
 ---
 name: strangler-fig-migration-check
-description: "Check that a legacy-to-new migration routes traffic incrementally rather than a big-bang cutover with no rollback path."
+description: "Check that a legacy-to-new migration routes traffic incrementally rather than a big-bang cutover with no rollback path. Use when reviewing a plan to replace a legacy system, service, or module."
 ---
 
 # strangler-fig-migration-check

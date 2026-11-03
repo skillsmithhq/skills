@@ -1,6 +1,6 @@
 ---
 name: test-coverage-gap-check
-description: "Check that new/changed business logic has a test covering the specific behavior change — not just that overall coverage percentage didn't drop."
+description: "Check that new/changed business logic has a test covering the specific behavior change — not just that overall coverage percentage didn't drop. Use when reviewing a diff that changes business logic."
 ---
 
 # test-coverage-gap-check

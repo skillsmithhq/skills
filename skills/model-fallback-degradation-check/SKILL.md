@@ -1,6 +1,6 @@
 ---
 name: model-fallback-degradation-check
-description: "Check that an AI-dependent feature defines a degraded mode for when the model API is unavailable, slow, or returns a low-confidence/malformed result — distinct from a general infrastructure SPOF check, since a \"successful\" call can still return unusable output."
+description: "Check that an AI-dependent feature defines a degraded mode for when the model API is unavailable, slow, or returns a low-confidence/malformed result — distinct from a general infrastructure SPOF check, since a \"successful\" call can still return unusable output. Use when reviewing a feature that calls a model API."
 ---
 
 # model-fallback-degradation-check

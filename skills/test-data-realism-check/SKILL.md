@@ -1,6 +1,6 @@
 ---
 name: test-data-realism-check
-description: "Check that test fixtures reflect realistic edge cases (nulls, boundary values, multi-tenant data) rather than only a clean happy-path shape."
+description: "Check that test fixtures reflect realistic edge cases (nulls, boundary values, multi-tenant data) rather than only a clean happy-path shape. Use when reviewing new or changed test fixtures, factories, or seed data."
 ---
 
 # test-data-realism-check

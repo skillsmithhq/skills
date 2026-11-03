@@ -7,7 +7,7 @@ description: "Check that CI/CD secrets are scoped to only the specific job/stage
 
 ## Instructions
 
-Check the secret's actual scope against which job uses it, narrowing if broader than needed. Check for the secret leaking via a debug/verbose command echoing environment variables or config into logs.
+Identify the CI/CD platform and how it scopes secrets (e.g. per job, per environment, per protected branch) first. Check the secret's actual scope against which job uses it, narrowing if broader than needed. Check for the secret leaking via a debug/verbose command echoing environment variables or config into logs.
 
 ## Inputs
 

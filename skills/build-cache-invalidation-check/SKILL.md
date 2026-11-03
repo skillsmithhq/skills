@@ -1,13 +1,13 @@
 ---
 name: build-cache-invalidation-check
-description: "Check that a CI build cache invalidates correctly when the lockfile changes, so a stale cache doesn't silently ship old dependency versions."
+description: "Check that a CI build cache invalidates correctly when the lockfile changes, so a stale cache doesn't silently ship old dependency versions. Use when reviewing CI cache configuration."
 ---
 
 # build-cache-invalidation-check
 
 ## Instructions
 
-Check the cache key includes a hash of the actual lockfile, not just the manifest. Check for the opposite failure too — an overly specific key (includes something irrelevant) that never hits, silently paying full install cost every run.
+Identify the CI system, the package manager, and its lockfile first (e.g. `package-lock.json`, `poetry.lock`, `go.sum`, `Cargo.lock`). Check the cache key includes a hash of the actual lockfile, not just the manifest. Check for the opposite failure too — an overly specific key (includes something irrelevant) that never hits, silently paying full install cost every run.
 
 ## Inputs
 

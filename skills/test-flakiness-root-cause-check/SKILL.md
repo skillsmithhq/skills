@@ -1,6 +1,6 @@
 ---
 name: test-flakiness-root-cause-check
-description: "Find the actual cause of a flaky test (timing/order dependence, shared mutable state, unmocked clock/network) instead of retrying or skipping it."
+description: "Find the actual cause of a flaky test (timing/order dependence, shared mutable state, unmocked clock/network) instead of retrying or skipping it. Use when a test passes and fails intermittently without code changes."
 ---
 
 # test-flakiness-root-cause-check

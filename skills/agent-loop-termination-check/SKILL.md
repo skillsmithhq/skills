@@ -1,13 +1,13 @@
 ---
 name: agent-loop-termination-check
-description: "Check that an autonomous agent's plan→act→observe loop has a hard termination condition — max iterations, a cost/time budget, or an explicit success/failure signal — rather than relying on the model to decide on its own when it's done."
+description: "Check that an autonomous agent's plan→act→observe loop has a hard termination condition — max iterations, a cost/time budget, or an explicit success/failure signal — rather than relying on the model to decide on its own when it's done. Use when reviewing agent loop or orchestration code."
 ---
 
 # agent-loop-termination-check
 
 ## Instructions
 
-Check for an explicit hard cap independent of the model's judgment. Check what happens when the cap is hit: fails loudly with partial state preserved, or silently stops mid-action with no record — the latter compounds into `agent-state-recovery-check`'s concern.
+Identify the agent framework or hand-written loop in use first, and whether it has a built-in cap (e.g. a max-steps or max-turns setting) and what it is set to. Check for an explicit hard cap independent of the model's judgment. Check what happens when the cap is hit: fails loudly with partial state preserved, or silently stops mid-action with no record — the latter compounds into `agent-state-recovery-check`'s concern.
 
 ## Inputs
 

@@ -1,6 +1,6 @@
 ---
 name: security-boundary-review
-description: "Locate the repo's actual inter-service auth mechanism and confirm a changed endpoint uses it, then check the gaps that pass a casual read: permission classes that check auth but not resource/tenant ownership, serializer field exposure from a recently added column, and rate limiting only where a convention already exists."
+description: "Locate the repo's actual inter-service auth mechanism and confirm a changed endpoint uses it, then check the gaps that pass a casual read: permission classes that check auth but not resource/tenant ownership, serializer field exposure from a recently added column, and rate limiting only where a convention already exists. Use when reviewing a new or changed endpoint or service-to-service call."
 ---
 
 # security-boundary-review

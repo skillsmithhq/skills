@@ -1,13 +1,13 @@
 ---
 name: mocking-boundary-check
-description: "Check that mocks are placed at the actual system boundary (external API, paid service), not on internal collaborators — over-mocking internal logic lets a test pass even when the real integration between two internal parts is broken."
+description: "Check that mocks are placed at the actual system boundary (external API, paid service), not on internal collaborators — over-mocking internal logic lets a test pass even when the real integration between two internal parts is broken. Use when reviewing tests that use mocks, stubs, or fakes."
 ---
 
 # mocking-boundary-check
 
 ## Instructions
 
-Check whether each mock stands in for something genuinely external, or for something internal the test is avoiding testing against for real. For the internal case, check whether a real integration test exists elsewhere; if not, that's the actual gap.
+Identify the repo's test framework and mocking tools first. Check whether each mock stands in for something genuinely external, or for something internal the test is avoiding testing against for real. For the internal case, check whether a real integration test exists elsewhere; if not, that's the actual gap.
 
 ## Inputs
 

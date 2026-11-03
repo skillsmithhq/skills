@@ -31,12 +31,12 @@ IaC (or CLI commands) creating the budget, alert thresholds, anomaly monitor, an
 - Billing data lags by several hours, so alerts can arrive after the spend; recommend thresholds that leave room.
 - Don't hard-code account ids or email addresses in shared code; use variables.
 - Write the IaC or CLI commands for the user to review; never run commands that create, change, or delete cloud resources without the user's explicit approval.
-- Cost Explorer API calls are billed per request (about $0.01 each); prefer a few targeted queries.
+- Cost Explorer API calls are billed per request (about USD 0.01 each); prefer a few targeted queries.
 
 ## Examples
 
 ### Example 1
 
-Input: "set a $300/month budget for our staging environment and alert the team"
+Input: "set a USD 300/month budget for our staging environment and alert the team"
 
 Output: A Terraform budget filtered on `tag:env=staging` with 50/80/100% actual and 100% forecasted alerts to an SNS topic, an anomaly monitor for the same tag, a list of 4 staging resources missing the `env` tag, and a reminder to activate `env` as a cost-allocation tag and confirm the SNS email subscription.

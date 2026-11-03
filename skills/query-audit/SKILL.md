@@ -1,6 +1,6 @@
 ---
 name: query-audit
-description: "Find related-object access inside a loop or serializer method, check it against actual select_related/prefetch_related coverage, and measure the real query count before/after."
+description: "Find N+1 queries (related-object access inside a loop or serializer) and check them against the ORM's actual eager-loading coverage (e.g. select_related/prefetch_related, includes, joinedload), measuring the real query count before/after. Use when an endpoint or job is slow or issues many queries."
 ---
 
 # query-audit

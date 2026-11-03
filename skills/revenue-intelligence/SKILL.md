@@ -117,7 +117,7 @@ Synthetic fixture, Jan–Jun 2026, as of 2026-06-30, with C013 merged into C003:
 | Top customer / top 3 | 31.46% / 80.90% | rev-concentration |
 | Collection rate | 97.57%; outstanding 3,500; overdue 250 | rev-collections |
 
-Exclusions: S010 (no start date, 350) and S011 (`US$`, 450) total 800 USD of MRR (3.5% of June MRR), and the duplicate invoice INV-1029 (7,000) was removed.
+Exclusions: S010 (no start date, 350) and S011 (`US$`, 450) total 800 USD of MRR (3.6% of June MRR), and the duplicate invoice INV-1029 (7,000) was removed.
 
 Finding (good): "Revenue is concentrated: C009 is 31.46% of MRR and the top 3 customers are 80.90% [CALC:rev-concentration]. Losing any one of the top 3 would cut MRR by 22–31%. Decision: whether to prioritise account management for the top 3 [REC]. Confidence: High for the measurement; the risk of loss itself is not measured."
 

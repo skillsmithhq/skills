@@ -25,6 +25,6 @@ A finding naming the specific import and the layering rule it violates.
 
 ### Example 1
 
-Input: a domain-layer service importing a DRF serializer class to reuse a validation helper.
+Input: a domain-layer service importing an API-layer serializer class (e.g. a DRF serializer) to reuse a validation helper.
 
-Output: Flagged — move the validation helper into the domain layer itself so the dependency points outward from the API layer, not inward.
+Output: Flagged — move the validation helper into the domain layer itself so the API layer depends on the domain layer, not the other way round.

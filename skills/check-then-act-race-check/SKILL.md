@@ -1,13 +1,13 @@
 ---
 name: check-then-act-race-check
-description: "Find read-then-write logic that checks a condition (a limit, a balance, a uniqueness rule) and writes without a DB-level lock or constraint, making it vulnerable to a race under concurrent requests."
+description: "Find read-then-write logic that checks a condition (a limit, a balance, a uniqueness rule) and writes without a DB-level lock or constraint, making it vulnerable to a race under concurrent requests. Use when reviewing code that enforces a limit, balance, or uniqueness rule."
 ---
 
 # check-then-act-race-check
 
 ## Instructions
 
-Identify any check-then-write sequence and confirm it's guarded by a `SELECT ... FOR UPDATE`, an atomic `F()`-expression update with a `WHERE` clause encoding the limit, or a DB-level constraint — not just a Python-level comparison before the write.
+Identify the repo's datastore and data-access layer first. Identify any check-then-write sequence and confirm it's guarded at the database: a row lock (e.g. `SELECT ... FOR UPDATE`), an atomic conditional update whose `WHERE` clause encodes the limit (e.g. `UPDATE ... SET used = used + 1 WHERE used < max_uses`, or Django `F()` expressions), a unique or check constraint, or the datastore's equivalent (conditional writes, compare-and-set) — not just an application-level comparison before the write.
 
 ## Inputs
 
